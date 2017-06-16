@@ -147,19 +147,19 @@ Install-Package NETCore.Encrypt
     ```
     
 ***
-# Easy to use with `EncryptExtensions`
+# Easy to use hash with `EncryptExtensions`
 
 ## MD5 Extensions
 
-    - ### String to MD5
+   - ### String to MD5
 
-    ```
-    var hashed="some string".MD5();
-    ```
+   ```csharp
+   var hashed="some string".MD5();
+   ```
 
-    - ### Class Instance to MD5
+   - ### Class Instance to MD5
 
-    ```
-    var objcet = new ClassObject();
-    var hashed=objcet.MD5();
-    ```
+   ```csharp
+   var objcet = new ClassObject();
+   var hashed=objcet.MD5();
+   ```
