@@ -53,33 +53,33 @@ Install-Package NETCore.Encrypt
     
   ## RSA
   
-  #### Create RSA Key
+  - #### Create RSA Key
 
-  ```csharp
-  var rsaKey = EncryptProvider.CreateRsaKey();
+    ```csharp
+    var rsaKey = EncryptProvider.CreateRsaKey();
+
+    var publicKey = rsaKey.PublicKey;
+    var privateKey = rsaKey.PrivateKey;
+    var exponent = rsaKey.Exponent;
+    var modulus = rsaKey.Modulus;
+    ```
+  - #### RSA encrypt
   
-  var publicKey = rsaKey.PublicKey;
-  var privateKey = rsaKey.PrivateKey;
-  var exponent = rsaKey.Exponent;
-  var modulus = rsaKey.Modulus;
-  ```
-  #### RSA encrypt
+    ```csharp
+    var publicKey = rsaKey.PublicKey;
+    var srcString = "rsa encrypt";
+
+    var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString);
+    ```
   
-  ```csharp
-  var publicKey = rsaKey.PublicKey;
-  var srcString = "rsa encrypt";
-  
-  var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString);
-  ```
-  
-  #### RSA decrypt
-  
-  ```csharp
-  var privateKey = rsaKey.PrivateKey;
-  var encryptedStr = "xxxx";
-  
-  var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
-  ```
+  - #### RSA decrypt
+
+    ```csharp
+    var privateKey = rsaKey.PrivateKey;
+    var encryptedStr = "xxxx";
+
+    var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
+    ```
   
   ## MD5
   
@@ -92,57 +92,57 @@ Install-Package NETCore.Encrypt
   
   ## SHA
   
-  #### SHA1
-  ```csharp
-  var srcString = "sha encrypt";    
-  var hashed = EncryptProvider.Sha1(srcString); 
-  ```
-  #### SHA256
-  ```csharp  
-  var srcString = "sha encrypt";    
-  var hashed = EncryptProvider.Sha256(srcString); 
-  ```  
-  #### SHA384
-  ```csharp  
-  var srcString = "sha encrypt";    
-  var hashed = EncryptProvider.Sha384(srcString); 
-  ```
-  #### SHA512
-  ```csharp
-  var srcString = "sha encrypt";    
-  var hashed = EncryptProvider.Sha512(srcString);
-  ```
+  - #### SHA1
+    ```csharp
+    var srcString = "sha encrypt";    
+    var hashed = EncryptProvider.Sha1(srcString); 
+    ```
+  - #### SHA256
+    ```csharp  
+    var srcString = "sha encrypt";    
+    var hashed = EncryptProvider.Sha256(srcString); 
+    ```  
+  - #### SHA384
+    ```csharp  
+    var srcString = "sha encrypt";    
+    var hashed = EncryptProvider.Sha384(srcString); 
+    ```
+  - #### SHA512
+    ```csharp
+    var srcString = "sha encrypt";    
+    var hashed = EncryptProvider.Sha512(srcString);
+    ```
   
   ## HMAC
   
-  #### HMAC-MD5
-  ```csharp
-  var key="xxx";
-  var srcString = "hmac md5 encrypt";     
-  var hashed = EncryptProvider.HMACMD5(srcString,key);
-  ```
-  #### HMAC-SHA1
-  ```csharp
-  var key="xxx";
-  var srcString = "hmac sha encrypt";    
-  var hashed = EncryptProvider.HMACSHA1(srcString,key);
-  ```
-  #### HMAC-SHA256
-  ```csharp
-  var key="xxx";
-  var srcString = "hmac sha encrypt";    
-  var hashed = EncryptProvider.HMACSHA256(srcString,key);
-  ```
-  #### HMAC-SHA384
-  ```csharp
-  var key="xxx";
-  var srcString = "hmac sha encrypt";    
-  var hashed = EncryptProvider.HMACSHA384(srcString,key);
-  ```
-  #### HMAC-SHA512
-  ```csharp
-  var key="xxx";
-  var srcString = "hmac sha encrypt";    
-  var hashed = EncryptProvider.HMACSHA(srcString，key);
-  ```
+  - #### HMAC-MD5
+    ```csharp
+    var key="xxx";
+    var srcString = "hmac md5 encrypt";     
+    var hashed = EncryptProvider.HMACMD5(srcString,key);
+    ```
+  - #### HMAC-SHA1
+    ```csharp
+    var key="xxx";
+    var srcString = "hmac sha encrypt";    
+    var hashed = EncryptProvider.HMACSHA1(srcString,key);
+    ```
+  - #### HMAC-SHA256
+    ```csharp
+    var key="xxx";
+    var srcString = "hmac sha encrypt";    
+    var hashed = EncryptProvider.HMACSHA256(srcString,key);
+    ```
+  - #### HMAC-SHA384
+    ```csharp
+    var key="xxx";
+    var srcString = "hmac sha encrypt";    
+    var hashed = EncryptProvider.HMACSHA384(srcString,key);
+    ```
+  - #### HMAC-SHA512
+    ```csharp
+    var key="xxx";
+    var srcString = "hmac sha encrypt";    
+    var hashed = EncryptProvider.HMACSHA(srcString，key);
+    ```
 
