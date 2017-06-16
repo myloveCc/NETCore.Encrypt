@@ -94,22 +94,22 @@ Install-Package NETCore.Encrypt
   
   - #### SHA1
     ```csharp
-    var srcString = "sha encrypt";    
+    var srcString = "sha hash";    
     var hashed = EncryptProvider.Sha1(srcString); 
     ```
   - #### SHA256
     ```csharp  
-    var srcString = "sha encrypt";    
+    var srcString = "sha hash";    
     var hashed = EncryptProvider.Sha256(srcString); 
     ```  
   - #### SHA384
     ```csharp  
-    var srcString = "sha encrypt";    
+    var srcString = "sha hash";    
     var hashed = EncryptProvider.Sha384(srcString); 
     ```
   - #### SHA512
     ```csharp
-    var srcString = "sha encrypt";    
+    var srcString = "sha hash";    
     var hashed = EncryptProvider.Sha512(srcString);
     ```
   
@@ -118,31 +118,31 @@ Install-Package NETCore.Encrypt
   - #### HMAC-MD5
     ```csharp
     var key="xxx";
-    var srcString = "hmac md5 encrypt";     
+    var srcString = "hmac md5 hash";     
     var hashed = EncryptProvider.HMACMD5(srcString,key);
     ```
   - #### HMAC-SHA1
     ```csharp
     var key="xxx";
-    var srcString = "hmac sha encrypt";    
+    var srcString = "hmac sha hash";    
     var hashed = EncryptProvider.HMACSHA1(srcString,key);
     ```
   - #### HMAC-SHA256
     ```csharp
     var key="xxx";
-    var srcString = "hmac sha encrypt";    
+    var srcString = "hmac sha hash";    
     var hashed = EncryptProvider.HMACSHA256(srcString,key);
     ```
   - #### HMAC-SHA384
     ```csharp
     var key="xxx";
-    var srcString = "hmac sha encrypt";    
+    var srcString = "hmac sha hash";    
     var hashed = EncryptProvider.HMACSHA384(srcString,key);
     ```
   - #### HMAC-SHA512
     ```csharp
     var key="xxx";
-    var srcString = "hmac sha encrypt";    
+    var srcString = "hmac sha hash";    
     var hashed = EncryptProvider.HMACSHA512(srcString，key);
     ```
     
