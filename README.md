@@ -143,6 +143,10 @@ Install-Package NETCore.Encrypt
     ```csharp
     var key="xxx";
     var srcString = "hmac sha encrypt";    
-    var hashed = EncryptProvider.HMACSHA(srcString，key);
+    var hashed = EncryptProvider.HMACSHA512(srcString，key);
     ```
+    
+***
+# Easy to use with `EncryptExtensions`
 
+...
