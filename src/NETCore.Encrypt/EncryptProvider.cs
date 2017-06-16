@@ -75,28 +75,29 @@ namespace NETCore.Encrypt
             Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
 
             Byte[] Cryptograph = null; // encrypted data
-            Aes Aes = Aes.Create();
-            try
+            using (Aes Aes = Aes.Create())
             {
-                using (MemoryStream Memory = new MemoryStream())
+                try
                 {
-                    using (CryptoStream Encryptor = new CryptoStream(Memory,
-                     Aes.CreateEncryptor(bKey, bVector),
-                     CryptoStreamMode.Write))
+                    using (MemoryStream Memory = new MemoryStream())
                     {
-                        Encryptor.Write(plainBytes, 0, plainBytes.Length);
-                        Encryptor.FlushFinalBlock();
+                        using (CryptoStream Encryptor = new CryptoStream(Memory,
+                         Aes.CreateEncryptor(bKey, bVector),
+                         CryptoStreamMode.Write))
+                        {
+                            Encryptor.Write(plainBytes, 0, plainBytes.Length);
+                            Encryptor.FlushFinalBlock();
 
-                        Cryptograph = Memory.ToArray();
+                            Cryptograph = Memory.ToArray();
+                        }
                     }
                 }
+                catch
+                {
+                    Cryptograph = null;
+                }
+                return Convert.ToBase64String(Cryptograph);
             }
-            catch
-            {
-                Cryptograph = null;
-            }
-
-            return Convert.ToBase64String(Cryptograph);
         }
 
         /// <summary>  
@@ -124,32 +125,34 @@ namespace NETCore.Encrypt
 
             Byte[] original = null; // decrypted data
 
-            Aes Aes = Aes.Create();
-            try
+            using (Aes Aes = Aes.Create())
             {
-                using (MemoryStream Memory = new MemoryStream(encryptedBytes))
+                try
                 {
-                    using (CryptoStream Decryptor = new CryptoStream(Memory, Aes.CreateDecryptor(bKey, bVector), CryptoStreamMode.Read))
+                    using (MemoryStream Memory = new MemoryStream(encryptedBytes))
                     {
-                        using (MemoryStream originalMemory = new MemoryStream())
+                        using (CryptoStream Decryptor = new CryptoStream(Memory, Aes.CreateDecryptor(bKey, bVector), CryptoStreamMode.Read))
                         {
-                            Byte[] Buffer = new Byte[1024];
-                            Int32 readBytes = 0;
-                            while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
+                            using (MemoryStream originalMemory = new MemoryStream())
                             {
-                                originalMemory.Write(Buffer, 0, readBytes);
-                            }
+                                Byte[] Buffer = new Byte[1024];
+                                Int32 readBytes = 0;
+                                while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
+                                {
+                                    originalMemory.Write(Buffer, 0, readBytes);
+                                }
 
-                            original = originalMemory.ToArray();
+                                original = originalMemory.ToArray();
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    original = null;
+                }
+                return Encoding.UTF8.GetString(original);
             }
-            catch
-            {
-                original = null;
-            }
-            return Encoding.UTF8.GetString(original);
         }
 
         /// <summary>  
@@ -205,6 +208,8 @@ namespace NETCore.Encrypt
         public static string AESDecrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
 
             Byte[] encryptedBytes = Convert.FromBase64String(data);
             Byte[] bKey = new Byte[32];
@@ -246,17 +251,17 @@ namespace NETCore.Encrypt
         /// RSA encrypt 
         /// </summary>
         /// <param name="publicKey">public key</param>
-        /// <param name="srcstring">src string</param>
+        /// <param name="srcString">src string</param>
         /// <returns>encrypted string</returns>
-        public static string RSAEncrypt(string publicKey, string srcstring)
+        public static string RSAEncrypt(string publicKey, string srcString)
         {
             Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
             using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(publicKey);
-                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcstring), RSAEncryptionPadding.OaepSHA1);
+                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.OaepSHA1);
                 return encryptBytes.ToHexString();
             }
         }
@@ -264,17 +269,17 @@ namespace NETCore.Encrypt
         /// RSA decrypt
         /// </summary>
         /// <param name="privateKey">private key</param>
-        /// <param name="srcstring">encrypted string</param>
+        /// <param name="srcString">encrypted string</param>
         /// <returns>Decrypted string</returns>
-        public static string RSADecrypt(string privateKey, string srcstring)
+        public static string RSADecrypt(string privateKey, string srcString)
         {
             Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
             using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(privateKey);
-                byte[] srcBytes = srcstring.ToBytes();
+                byte[] srcBytes = srcString.ToBytes();
                 byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.OaepSHA1);
                 return Encoding.UTF8.GetString(decryptBytes);
             }
@@ -306,19 +311,46 @@ namespace NETCore.Encrypt
         /// <summary>
         /// MD5 hash
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <returns></returns>
-        public static string Md5(string srcstring)
+        public static string Md5(string srcString)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            MD5 md5 = MD5.Create();
-            byte[] bytes_md5_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
-            string str_md5_out = BitConverter.ToString(bytes_md5_out);
-            str_md5_out = str_md5_out.Replace("-", "");
-            return str_md5_out;
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] bytes_md5_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
+                string str_md5_out = BitConverter.ToString(bytes_md5_out);
+                str_md5_out = str_md5_out.Replace("-", "");
+                return str_md5_out;
+            }
         }
+        #endregion
+
+        #region HMACMD5
+        /// <summary>
+        /// MD5 hash
+        /// </summary>
+        /// <param name="srcString">The string to be encrypted</param>
+        /// <param name="key">encrypte key</param>
+        /// <returns></returns>
+        public static string HMACMD5(string srcString, string key)
+        {
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+
+            byte[] secrectKey = Encoding.UTF8.GetBytes(key);
+            using (HMACMD5 md5 = new HMACMD5(secrectKey))
+            {
+                byte[] bytes_md5_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
+                string str_md5_out = BitConverter.ToString(bytes_md5_out);
+                str_md5_out = str_md5_out.Replace("-", "");
+                return str_md5_out;
+            }
+        }
+
         #endregion
 
         #region SHA1
@@ -331,12 +363,14 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(str, "SHA1待加密字符");
 
-            SHA1 sha1 = SHA1.Create();
-            byte[] bytes_sha1_in = Encoding.UTF8.GetBytes(str);
-            byte[] bytes_sha1_out = sha1.ComputeHash(bytes_sha1_in);
-            string str_sha1_out = BitConverter.ToString(bytes_sha1_out);
-            str_sha1_out = str_sha1_out.Replace("-", "");
-            return str_sha1_out;
+            using (SHA1 sha1 = SHA1.Create())
+            {
+                byte[] bytes_sha1_in = Encoding.UTF8.GetBytes(str);
+                byte[] bytes_sha1_out = sha1.ComputeHash(bytes_sha1_in);
+                string str_sha1_out = BitConverter.ToString(bytes_sha1_out);
+                str_sha1_out = str_sha1_out.Replace("-", "");
+                return str_sha1_out;
+            }
         }
         #endregion
 
@@ -345,18 +379,20 @@ namespace NETCore.Encrypt
         /// <summary>
         /// SHA256 encrypt
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <returns></returns>
-        public static string Sha256(string srcstring)
+        public static string Sha256(string srcString)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            SHA256 sha256 = SHA256.Create();
-            byte[] bytes_sha256_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_sha256_out = sha256.ComputeHash(bytes_sha256_in);
-            string str_sha256_out = BitConverter.ToString(bytes_sha256_out);
-            str_sha256_out = str_sha256_out.Replace("-", "");
-            return str_sha256_out;
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes_sha256_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_sha256_out = sha256.ComputeHash(bytes_sha256_in);
+                string str_sha256_out = BitConverter.ToString(bytes_sha256_out);
+                str_sha256_out = str_sha256_out.Replace("-", "");
+                return str_sha256_out;
+            }
         }
 
         #endregion
@@ -366,18 +402,21 @@ namespace NETCore.Encrypt
         /// <summary>
         /// SHA384 encrypt
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <returns></returns>
-        public static string Sha384(string srcstring)
+        public static string Sha384(string srcString)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            SHA384 sha384 = SHA384.Create();
-            byte[] bytes_sha384_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_sha384_out = sha384.ComputeHash(bytes_sha384_in);
-            string str_sha384_out = BitConverter.ToString(bytes_sha384_out);
-            str_sha384_out = str_sha384_out.Replace("-", "");
-            return str_sha384_out;
+            using (SHA384 sha384 = SHA384.Create())
+            {
+                byte[] bytes_sha384_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_sha384_out = sha384.ComputeHash(bytes_sha384_in);
+                string str_sha384_out = BitConverter.ToString(bytes_sha384_out);
+                str_sha384_out = str_sha384_out.Replace("-", "");
+                return str_sha384_out;
+            }
+
         }
         #endregion
 
@@ -385,18 +424,20 @@ namespace NETCore.Encrypt
         /// <summary>
         /// SHA512 encrypt
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <returns></returns>
-        public static string Sha512(string srcstring)
+        public static string Sha512(string srcString)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            SHA512 sha512 = SHA512.Create();
-            byte[] bytes_sha512_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_sha512_out = sha512.ComputeHash(bytes_sha512_in);
-            string str_sha512_out = BitConverter.ToString(bytes_sha512_out);
-            str_sha512_out = str_sha512_out.Replace("-", "");
-            return str_sha512_out;
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                byte[] bytes_sha512_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_sha512_out = sha512.ComputeHash(bytes_sha512_in);
+                string str_sha512_out = BitConverter.ToString(bytes_sha512_out);
+                str_sha512_out = str_sha512_out.Replace("-", "");
+                return str_sha512_out;
+            }
         }
 
         #endregion
@@ -404,27 +445,29 @@ namespace NETCore.Encrypt
         #region HMACSHA1
 
         /// <summary>
-        /// HMACSHA1
+        /// HMAC_SHA1
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
         /// <returns></returns>
-        public static string HMACSHA1(string srcstring, string key)
+        public static string HMACSHA1(string srcString, string key)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotEmpty(key, nameof(key));
 
             byte[] secrectKey = Encoding.UTF8.GetBytes(key);
-            HMACSHA1 hmac = new HMACSHA1(secrectKey);
-            hmac.Initialize();
+            using (HMACSHA1 hmac = new HMACSHA1(secrectKey))
+            {
+                hmac.Initialize();
 
-            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+                byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
 
-            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
-            str_hamc_out = str_hamc_out.Replace("-", "");
+                string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+                str_hamc_out = str_hamc_out.Replace("-", "");
 
-            return str_hamc_out;
+                return str_hamc_out;
+            }
         }
 
         #endregion
@@ -432,27 +475,29 @@ namespace NETCore.Encrypt
         #region HMACSHA256
 
         /// <summary>
-        /// HMACSHA256 
+        /// HMAC_SHA256 
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
         /// <returns></returns>
-        public static string HMACSHA256(string srcstring, string key)
+        public static string HMACSHA256(string srcString, string key)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotEmpty(key, nameof(key));
 
             byte[] secrectKey = Encoding.UTF8.GetBytes(key);
-            HMACSHA256 hmac = new HMACSHA256(secrectKey);
-            hmac.Initialize();
+            using (HMACSHA256 hmac = new HMACSHA256(secrectKey))
+            {
+                hmac.Initialize();
 
-            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+                byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
 
-            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
-            str_hamc_out = str_hamc_out.Replace("-", "");
+                string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+                str_hamc_out = str_hamc_out.Replace("-", "");
 
-            return str_hamc_out;
+                return str_hamc_out;
+            }
         }
 
         #endregion
@@ -460,27 +505,31 @@ namespace NETCore.Encrypt
         #region HMACSHA384
 
         /// <summary>
-        /// HMACSHA384
+        /// HMAC_SHA384
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
         /// <returns></returns>
-        public static string HMACSHA384(string srcstring, string key)
+        public static string HMACSHA384(string srcString, string key)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            throw new NotSupportedException("HMACSHA384 hashed value is incorrect");
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotEmpty(key, nameof(key));
 
             byte[] secrectKey = Encoding.UTF8.GetBytes(key);
-            HMACSHA384 hmac = new HMACSHA384(secrectKey);
-            hmac.Initialize();
+            using (HMACSHA384 hmac = new HMACSHA384(secrectKey))
+            {
+                hmac.Initialize();
 
-            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+                byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
 
-            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
-            str_hamc_out = str_hamc_out.Replace("-", "");
 
-            return str_hamc_out;
+                string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+                str_hamc_out = str_hamc_out.Replace("-", "");
+
+                return str_hamc_out;
+            }
         }
 
         #endregion
@@ -488,27 +537,29 @@ namespace NETCore.Encrypt
         #region HMACSHA512
 
         /// <summary>
-        /// HMACSHA512
+        /// HMAC_SHA512
         /// </summary>
-        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
         /// <returns></returns>
-        public static string HMACSHA512(string srcstring, string key)
+        public static string HMACSHA512(string srcString, string key)
         {
-            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotEmpty(key, nameof(key));
 
             byte[] secrectKey = Encoding.UTF8.GetBytes(key);
-            HMACSHA512 hmac = new HMACSHA512(secrectKey);
-            hmac.Initialize();
+            using (HMACSHA512 hmac = new HMACSHA512(secrectKey))
+            {
+                hmac.Initialize();
 
-            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
-            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+                byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcString);
+                byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
 
-            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
-            str_hamc_out = str_hamc_out.Replace("-", "");
+                string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+                str_hamc_out = str_hamc_out.Replace("-", "");
 
-            return str_hamc_out;
+                return str_hamc_out;
+            }
         }
 
         #endregion
@@ -552,7 +603,7 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         private static string CreateMachineKey(int length)
         {
- 
+
             byte[] random = new byte[length / 2];
 
             RandomNumberGenerator rng = RandomNumberGenerator.Create();
