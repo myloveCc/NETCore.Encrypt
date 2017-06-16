@@ -163,3 +163,19 @@ Install-Package NETCore.Encrypt
    var objcet = new ClassObject();
    var hashed=objcet.MD5();
    ```
+## SHA Extensions
+
+   - ### String to SHA1
+
+   ```csharp
+   var hashed="some string".SHA1();
+   ```
+
+   - ### Class Instance to SHA1
+
+   ```csharp
+   var objcet = new ClassObject();
+   var hashed=objcet.SHA1();
+   ```
+   
+   
