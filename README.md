@@ -149,4 +149,17 @@ Install-Package NETCore.Encrypt
 ***
 # Easy to use with `EncryptExtensions`
 
-## coming soon...
+## MD5 Extensions
+
+    - ### String to MD5
+
+    ```
+    var hashed="some string".MD5();
+    ```
+
+    - ### Class Instance to MD5
+
+    ```
+    var objcet = new ClassObject();
+    var hashed=objcet.MD5();
+    ```
