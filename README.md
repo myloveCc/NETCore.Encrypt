@@ -41,14 +41,14 @@ Install-Package NETCore.Encrypt
   - AES decrypt without iv
     ```csharp
     var encryptedStr = "xxxx";
-    var encrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
+    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
     ```
   
   - AES decrypt with iv
    
     ```csharp
     var encryptedStr = "xxxx";
-    var encrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
+    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
     
   ## RSA
@@ -78,7 +78,7 @@ Install-Package NETCore.Encrypt
     var privateKey = rsaKey.PrivateKey;
     var encryptedStr = "xxxx";
 
-    var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
+    var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
     ```
   
   ## MD5
