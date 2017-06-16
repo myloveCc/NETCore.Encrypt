@@ -23,7 +23,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data MD5 extension
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <returns></returns>
         public static string MD5<T>(this T srcObj) where T : class
@@ -47,7 +47,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// DATA SHA1 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <returns></returns>
         public static string SHA1<T>(this T srcObj) where T : class
@@ -70,7 +70,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data SHA256 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <returns></returns>
         public static string SHA256<T>(this T srcObj) where T : class
@@ -93,7 +93,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data SHA384 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <returns></returns>
         public static string SHA384<T>(this T srcObj) where T : class
@@ -116,7 +116,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data SHA512 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <returns></returns>
         public static string SHA512<T>(this T srcObj) where T : class
@@ -140,7 +140,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data HMACSHA1 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -165,7 +165,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data HMACSHA256 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -189,7 +189,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data HMACSHA384 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -213,7 +213,7 @@ namespace NETCore.Encrypt.Extensions
         /// <summary>
         /// Data HMACSHA512 extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="T"/></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="srcObj"></param>
         /// <param name="key"></param>
         /// <returns></returns>
