@@ -1,0 +1,571 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
+using System.IO;
+using NETCore.Encrypt.Shared;
+using NETCore.Encrypt.Extensions;
+using NETCore.Encrypt.Internal;
+using NETCore.Encrypt.Extensions.Internal;
+
+namespace NETCore.Encrypt
+{
+    public class EncryptProvider
+    {
+        #region AES
+
+        /// <summary>
+        /// create ase key
+        /// </summary>
+        /// <returns></returns>
+        public static AESKey CreateAesKey()
+        {
+            return new AESKey()
+            {
+                Key = GetRandomStr(32),
+                IV = GetRandomStr(16)
+            };
+        }
+
+        /// <summary>
+        /// Generate a random key
+        /// </summary>
+        /// <param name="n">key length，IV is 16，Key is 32</param>
+        /// <returns>return random value</returns>
+        private static string GetRandomStr(int length)
+        {
+            char[] arrChar = new char[]{
+           'a','b','d','c','e','f','g','h','i','j','k','l','m','n','p','r','q','s','t','u','v','w','z','y','x',
+           '0','1','2','3','4','5','6','7','8','9',
+           'A','B','C','D','E','F','G','H','I','J','K','L','M','N','Q','P','R','T','S','V','U','W','X','Y','Z'
+          };
+
+            StringBuilder num = new StringBuilder();
+
+            Random rnd = new Random(DateTime.Now.Millisecond);
+            for (int i = 0; i < length; i++)
+            {
+                num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
+            }
+
+            return num.ToString();
+        }
+
+        /// <summary>  
+        /// AES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted string</returns>  
+        public static string AESEncrypt(string data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+            Byte[] bVector = new Byte[16];
+            Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+
+            Byte[] Cryptograph = null; // encrypted data
+            Aes Aes = Aes.Create();
+            try
+            {
+                using (MemoryStream Memory = new MemoryStream())
+                {
+                    using (CryptoStream Encryptor = new CryptoStream(Memory,
+                     Aes.CreateEncryptor(bKey, bVector),
+                     CryptoStreamMode.Write))
+                    {
+                        Encryptor.Write(plainBytes, 0, plainBytes.Length);
+                        Encryptor.FlushFinalBlock();
+
+                        Cryptograph = Memory.ToArray();
+                    }
+                }
+            }
+            catch
+            {
+                Cryptograph = null;
+            }
+
+            return Convert.ToBase64String(Cryptograph);
+        }
+
+        /// <summary>  
+        ///  AES decrypt
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static string AESDecrypt(string data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] encryptedBytes = Convert.FromBase64String(data);
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+            Byte[] bVector = new Byte[16];
+            Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+
+            Byte[] original = null; // decrypted data
+
+            Aes Aes = Aes.Create();
+            try
+            {
+                using (MemoryStream Memory = new MemoryStream(encryptedBytes))
+                {
+                    using (CryptoStream Decryptor = new CryptoStream(Memory, Aes.CreateDecryptor(bKey, bVector), CryptoStreamMode.Read))
+                    {
+                        using (MemoryStream originalMemory = new MemoryStream())
+                        {
+                            Byte[] Buffer = new Byte[1024];
+                            Int32 readBytes = 0;
+                            while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
+                            {
+                                originalMemory.Write(Buffer, 0, readBytes);
+                            }
+
+                            original = originalMemory.ToArray();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                original = null;
+            }
+            return Encoding.UTF8.GetString(original);
+        }
+
+        /// <summary>  
+        /// AES encrypt ( no IV)  
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <returns>Encrypted string</returns>  
+        public static string AESEncrypt(string data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            using (MemoryStream mStream = new MemoryStream())
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+                    Byte[] bKey = new Byte[32];
+                    Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+                    aes.Mode = CipherMode.ECB;
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 128;
+                    //aes.Key = _key;  
+                    aes.Key = bKey;
+                    //aes.IV = _iV; 
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        try
+                        {
+                            cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+                            cryptoStream.FlushFinalBlock();
+                            return Convert.ToBase64String(mStream.ToArray());
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>  
+        /// AES decrypt( no IV)  
+        /// </summary>  
+        /// <param name="data">encrypted data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static string AESDecrypt(string data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Byte[] encryptedBytes = Convert.FromBase64String(data);
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+            using (MemoryStream mStream = new MemoryStream(encryptedBytes))
+            {
+                //mStream.Write( encryptedBytes, 0, encryptedBytes.Length );  
+                //mStream.Seek( 0, SeekOrigin.Begin );  
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Mode = CipherMode.ECB;
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 128;
+                    aes.Key = bKey;
+                    //aes.IV = _iV;  
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        try
+                        {
+                            byte[] tmp = new byte[encryptedBytes.Length + 32];
+                            int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length + 32);
+                            byte[] ret = new byte[len];
+                            Array.Copy(tmp, 0, ret, 0, len);
+                            return Encoding.UTF8.GetString(ret);
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region RSA
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="srcstring">src string</param>
+        /// <returns>encrypted string</returns>
+        public static string RSAEncrypt(string publicKey, string srcstring)
+        {
+            Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.FromJsonString(publicKey);
+                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcstring), RSAEncryptionPadding.OaepSHA1);
+                return encryptBytes.ToHexString();
+            }
+        }
+        /// <summary>
+        /// RSA decrypt
+        /// </summary>
+        /// <param name="privateKey">private key</param>
+        /// <param name="srcstring">encrypted string</param>
+        /// <returns>Decrypted string</returns>
+        public static string RSADecrypt(string privateKey, string srcstring)
+        {
+            Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.FromJsonString(privateKey);
+                byte[] srcBytes = srcstring.ToBytes();
+                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.OaepSHA1);
+                return Encoding.UTF8.GetString(decryptBytes);
+            }
+        }
+        /// <summary>
+        /// Create an RSA key 
+        /// </summary>
+        /// <returns></returns>
+        public static RSAKey CreateRsaKey()
+        {
+            using (RSA rsa = RSA.Create())
+            {
+                string publicKey = rsa.ToJsonString(false);
+                string privateKey = rsa.ToJsonString(true);
+
+                return new RSAKey()
+                {
+                    PublicKey = publicKey,
+                    PrivateKey = privateKey,
+                    Exponent = rsa.ExportParameters(false).Exponent.ToHexString(),
+                    Modulus = rsa.ExportParameters(false).Modulus.ToHexString()
+                };
+            }
+        }
+        #endregion
+
+        #region MD5
+
+        /// <summary>
+        /// MD5 hash
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <returns></returns>
+        public static string Md5(string srcstring)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            MD5 md5 = MD5.Create();
+            byte[] bytes_md5_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
+            string str_md5_out = BitConverter.ToString(bytes_md5_out);
+            str_md5_out = str_md5_out.Replace("-", "");
+            return str_md5_out;
+        }
+        #endregion
+
+        #region SHA1
+        /// <summary>
+        /// SHA1加密
+        /// </summary>
+        /// <param name="str">The string to be encrypted</param>
+        /// <returns></returns>
+        public static string Sha1(string str)
+        {
+            Check.Argument.IsNotEmpty(str, "SHA1待加密字符");
+
+            SHA1 sha1 = SHA1.Create();
+            byte[] bytes_sha1_in = Encoding.UTF8.GetBytes(str);
+            byte[] bytes_sha1_out = sha1.ComputeHash(bytes_sha1_in);
+            string str_sha1_out = BitConverter.ToString(bytes_sha1_out);
+            str_sha1_out = str_sha1_out.Replace("-", "");
+            return str_sha1_out;
+        }
+        #endregion
+
+        #region SHA256
+
+        /// <summary>
+        /// SHA256 encrypt
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <returns></returns>
+        public static string Sha256(string srcstring)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            SHA256 sha256 = SHA256.Create();
+            byte[] bytes_sha256_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_sha256_out = sha256.ComputeHash(bytes_sha256_in);
+            string str_sha256_out = BitConverter.ToString(bytes_sha256_out);
+            str_sha256_out = str_sha256_out.Replace("-", "");
+            return str_sha256_out;
+        }
+
+        #endregion
+
+        #region SHA384
+
+        /// <summary>
+        /// SHA384 encrypt
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <returns></returns>
+        public static string Sha384(string srcstring)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            SHA384 sha384 = SHA384.Create();
+            byte[] bytes_sha384_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_sha384_out = sha384.ComputeHash(bytes_sha384_in);
+            string str_sha384_out = BitConverter.ToString(bytes_sha384_out);
+            str_sha384_out = str_sha384_out.Replace("-", "");
+            return str_sha384_out;
+        }
+        #endregion
+
+        #region SHA512
+        /// <summary>
+        /// SHA512 encrypt
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <returns></returns>
+        public static string Sha512(string srcstring)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+
+            SHA512 sha512 = SHA512.Create();
+            byte[] bytes_sha512_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_sha512_out = sha512.ComputeHash(bytes_sha512_in);
+            string str_sha512_out = BitConverter.ToString(bytes_sha512_out);
+            str_sha512_out = str_sha512_out.Replace("-", "");
+            return str_sha512_out;
+        }
+
+        #endregion
+
+        #region HMACSHA1
+
+        /// <summary>
+        /// HMACSHA1
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="key">encrypte key</param>
+        /// <returns></returns>
+        public static string HMACSHA1(string srcstring, string key)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+
+            byte[] secrectKey = Encoding.UTF8.GetBytes(key);
+            HMACSHA1 hmac = new HMACSHA1(secrectKey);
+            hmac.Initialize();
+
+            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+
+            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+            str_hamc_out = str_hamc_out.Replace("-", "");
+
+            return str_hamc_out;
+        }
+
+        #endregion
+
+        #region HMACSHA256
+
+        /// <summary>
+        /// HMACSHA256 
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="key">encrypte key</param>
+        /// <returns></returns>
+        public static string HMACSHA256(string srcstring, string key)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+
+            byte[] secrectKey = Encoding.UTF8.GetBytes(key);
+            HMACSHA256 hmac = new HMACSHA256(secrectKey);
+            hmac.Initialize();
+
+            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+
+            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+            str_hamc_out = str_hamc_out.Replace("-", "");
+
+            return str_hamc_out;
+        }
+
+        #endregion
+
+        #region HMACSHA384
+
+        /// <summary>
+        /// HMACSHA384
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="key">encrypte key</param>
+        /// <returns></returns>
+        public static string HMACSHA384(string srcstring, string key)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+
+            byte[] secrectKey = Encoding.UTF8.GetBytes(key);
+            HMACSHA384 hmac = new HMACSHA384(secrectKey);
+            hmac.Initialize();
+
+            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+
+            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+            str_hamc_out = str_hamc_out.Replace("-", "");
+
+            return str_hamc_out;
+        }
+
+        #endregion
+
+        #region HMACSHA512
+
+        /// <summary>
+        /// HMACSHA512
+        /// </summary>
+        /// <param name="srcstring">The string to be encrypted</param>
+        /// <param name="key">encrypte key</param>
+        /// <returns></returns>
+        public static string HMACSHA512(string srcstring, string key)
+        {
+            Check.Argument.IsNotEmpty(srcstring, nameof(srcstring));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+
+            byte[] secrectKey = Encoding.UTF8.GetBytes(key);
+            HMACSHA512 hmac = new HMACSHA512(secrectKey);
+            hmac.Initialize();
+
+            byte[] bytes_hmac_in = Encoding.UTF8.GetBytes(srcstring);
+            byte[] bytes_hamc_out = hmac.ComputeHash(bytes_hmac_in);
+
+            string str_hamc_out = BitConverter.ToString(bytes_hamc_out);
+            str_hamc_out = str_hamc_out.Replace("-", "");
+
+            return str_hamc_out;
+        }
+
+        #endregion
+
+        #region Machine Key
+
+        /// <summary>
+        /// Create decryptionKey
+        /// </summary>
+        /// <param name="length">decryption key length range is 16 -48</param>
+        /// <returns>DecryptionKey</returns>
+        public static string CreateDecryptionKey(int length)
+        {
+            Check.Argument.IsNotOutOfRange(length, 16, 48, nameof(length));
+            return CreateMachineKey(length);
+        }
+
+        /// <summary>
+        /// Create validationKey
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns>ValidationKey</returns>
+        public static string CreateValidationKey(int length)
+        {
+            Check.Argument.IsNotOutOfRange(length, 48, 128, nameof(length));
+            return CreateMachineKey(length);
+        }
+
+        /// <summary>
+        /// 使用加密服务提供程序实现加密生成随机数
+        /// 
+        /// 说明：
+        /// validationKey 的值可以是48到128个字符长，强烈建议使用可用的最长密钥
+        /// decryptionKey 的值可以是16到48字符长，建议使用48字符长
+        /// 
+        /// 使用方式：
+        /// string decryptionKey = EncryptManager.CreateMachineKey(48);
+        /// string validationKey = EncryptManager.CreateMachineKey(128);
+        /// </summary>
+        /// <param name="length">长度</param>
+        /// <returns></returns>
+        private static string CreateMachineKey(int length)
+        {
+ 
+            byte[] random = new byte[length / 2];
+
+            RandomNumberGenerator rng = RandomNumberGenerator.Create();
+            rng.GetBytes(random);
+
+            StringBuilder machineKey = new StringBuilder(length);
+            for (int i = 0; i < random.Length; i++)
+            {
+                machineKey.Append(string.Format("{0:X2}", random[i]));
+            }
+            return machineKey.ToString();
+        }
+
+        #endregion
+    }
+}
