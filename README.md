@@ -178,4 +178,25 @@ Install-Package NETCore.Encrypt
    var hashed=objcet.SHA1();
    ```
    
+ ### `Tips：SHA256,SHA384,SHA512 the same usage like SHA1 `
+ 
+ ## HMACSHA Extensions
+
+   - ### String to HMACSHA1
+
+   ```csharp
+   var key="xxx";
+   var hashed="some string".HMACSHA1(key);
+   ```
+
+   - ### Class Instance to SHA1
+
+   ```csharp
+   var key="xxx";
+   var objcet = new ClassObject();
+   var hashed=objcet.HMACSHA1(key);
+   ```
    
+ ### `Tips：HMACSHA256,HMACSHA384,HMACSHA512 the same usage like HMACSHA1 `
+
+# LICENSE
