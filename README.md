@@ -189,7 +189,7 @@ Install-Package NETCore.Encrypt
    var hashed="some string".HMACSHA1(key);
    ```
 
-   - ### Class Instance to SHA1
+   - ### Class Instance to HMACSHA1
 
    ```csharp
    var key="xxx";
@@ -199,4 +199,7 @@ Install-Package NETCore.Encrypt
    
  ### `Tips：HMACSHA256,HMACSHA384,HMACSHA512 the same usage like HMACSHA1 `
 
+
 # LICENSE
+
+[MIT License](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
