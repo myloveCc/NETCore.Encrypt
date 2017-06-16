@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Company>Lvcc</Company>
+    <Product>Lvcc</Product>
+    <Authors>Lvcc</Authors>
+    <Description>NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512，</Description>
+    <Copyright>Copyright 2017 (c) Lvcc. All rights reserved</Copyright>
+    <PackageLicenseUrl>https://github.com/myloveCc/NETCore.Encrypt/blob/master/License</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
