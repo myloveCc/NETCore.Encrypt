@@ -512,7 +512,6 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         public static string HMACSHA384(string srcString, string key)
         {
-            throw new NotSupportedException("HMACSHA384 hashed value is incorrect");
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotEmpty(key, nameof(key));
 

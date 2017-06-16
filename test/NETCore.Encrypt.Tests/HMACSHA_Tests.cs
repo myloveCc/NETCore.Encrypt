@@ -76,11 +76,11 @@ namespace NETCore.Encrypt.Tests
             var srcString = "hmacsha encrypt";
 
             //Ack
-            var hashed = EncryptProvider.HMACSHA384(srcString, key);
+            var hashed = EncryptProvider.HMACSHA384(srcString, key).ToLower();
 
             //Assert
             Assert.NotEmpty(hashed);
-            Assert.Equal("211205887bcea4938e4cadd51b2006c03d40f2b85b26393ff1112b5a4dd192db3a023eb4a7e22bd9de351da7464250ae", hashed.ToLower());
+            Assert.Equal("23856c5634667488663c77a9f0e37b7d4ef75cafac2e64622625928e90052a9b8ac748297d62894c5739419806ec95df", hashed);
         }
 
         [Fact(DisplayName = "HMACSHA384 emtpy data test")]
