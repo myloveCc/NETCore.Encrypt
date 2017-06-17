@@ -39,9 +39,10 @@ Install-Package NETCore.Encrypt
 #### ASE decrypt
 
   - AES decrypt without iv
+    
     ```csharp
     var encryptedStr = "xxxx";
-    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
+    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
     ```
   
   - AES decrypt with iv
