@@ -639,6 +639,7 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         public static string Base64Encrypt(string input, Encoding encoding)
         {
+            Check.Argument.IsNotEmpty(input, nameof(input));
             return Convert.ToBase64String(encoding.GetBytes(input));
         }
 
@@ -660,6 +661,7 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         public static string Base64Decrypt(string input, Encoding encoding)
         {
+            Check.Argument.IsNotEmpty(input, nameof(input));
             return encoding.GetString(Convert.FromBase64String(input));
         }
         #endregion
