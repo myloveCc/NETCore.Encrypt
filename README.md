@@ -157,26 +157,12 @@ Install-Package NETCore.Encrypt
    ```csharp
    var hashed="some string".MD5();
    ```
-
-   - ### Class Instance to MD5
-
-   ```csharp
-   var objcet = new ClassObject();
-   var hashed=objcet.MD5();
-   ```
 ## SHA Extensions
 
    - ### String to SHA1
 
    ```csharp
    var hashed="some string".SHA1();
-   ```
-
-   - ### Class Instance to SHA1
-
-   ```csharp
-   var objcet = new ClassObject();
-   var hashed=objcet.SHA1();
    ```
    
  ### `Tips：SHA256,SHA384,SHA512 the same usage like SHA1 `
@@ -188,14 +174,6 @@ Install-Package NETCore.Encrypt
    ```csharp
    var key="xxx";
    var hashed="some string".HMACSHA1(key);
-   ```
-
-   - ### Class Instance to HMACSHA1
-
-   ```csharp
-   var key="xxx";
-   var objcet = new ClassObject();
-   var hashed=objcet.HMACSHA1(key);
    ```
    
  ### `Tips：HMACSHA256,HMACSHA384,HMACSHA512 the same usage like HMACSHA1 `
