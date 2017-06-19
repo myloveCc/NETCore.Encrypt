@@ -39,16 +39,17 @@ Install-Package NETCore.Encrypt
 #### ASE decrypt
 
   - AES decrypt without iv
+    
     ```csharp
     var encryptedStr = "xxxx";
-    var encrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
+    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
     ```
   
   - AES decrypt with iv
    
     ```csharp
     var encryptedStr = "xxxx";
-    var encrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
+    var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
     
   ## RSA
@@ -78,7 +79,7 @@ Install-Package NETCore.Encrypt
     var privateKey = rsaKey.PrivateKey;
     var encryptedStr = "xxxx";
 
-    var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
+    var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
     ```
   
   ## MD5
@@ -147,6 +148,59 @@ Install-Package NETCore.Encrypt
     ```
     
 ***
-# Easy to use with `EncryptExtensions`
+# Easy to use hash with `EncryptExtensions`
 
-## coming soon...
+## MD5 Extensions
+
+   - ### String to MD5
+
+   ```csharp
+   var hashed="some string".MD5();
+   ```
+
+   - ### Class Instance to MD5
+
+   ```csharp
+   var objcet = new ClassObject();
+   var hashed=objcet.MD5();
+   ```
+## SHA Extensions
+
+   - ### String to SHA1
+
+   ```csharp
+   var hashed="some string".SHA1();
+   ```
+
+   - ### Class Instance to SHA1
+
+   ```csharp
+   var objcet = new ClassObject();
+   var hashed=objcet.SHA1();
+   ```
+   
+ ### `Tips：SHA256,SHA384,SHA512 the same usage like SHA1 `
+ 
+ ## HMACSHA Extensions
+
+   - ### String to HMACSHA1
+
+   ```csharp
+   var key="xxx";
+   var hashed="some string".HMACSHA1(key);
+   ```
+
+   - ### Class Instance to HMACSHA1
+
+   ```csharp
+   var key="xxx";
+   var objcet = new ClassObject();
+   var hashed=objcet.HMACSHA1(key);
+   ```
+   
+ ### `Tips：HMACSHA256,HMACSHA384,HMACSHA512 the same usage like HMACSHA1 `
+
+
+# LICENSE
+
+[MIT License](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
