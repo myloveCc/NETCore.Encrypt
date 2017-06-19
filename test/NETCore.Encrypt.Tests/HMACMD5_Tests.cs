@@ -14,7 +14,7 @@ namespace NETCore.Encrypt.Tests
         {
             var srcString = "hmacmd5 value";
 
-            //Ack
+            //Act
             var hashed = EncryptProvider.HMACMD5(srcString, key);
 
             //Assert

@@ -12,6 +12,8 @@
     <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

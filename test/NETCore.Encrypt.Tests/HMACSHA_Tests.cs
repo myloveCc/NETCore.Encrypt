@@ -15,7 +15,7 @@ namespace NETCore.Encrypt.Tests
         {
             var srcString = "hmacsha encrypt";
 
-            //Ack
+            //Act
             var hashed = EncryptProvider.HMACSHA1(srcString, key);
 
             //Assert
@@ -45,7 +45,7 @@ namespace NETCore.Encrypt.Tests
         {
             var srcString = "hmacsha encrypt";
 
-            //Ack
+            //Act
             var hashed = EncryptProvider.HMACSHA256(srcString, key);
 
             //Assert
@@ -75,7 +75,7 @@ namespace NETCore.Encrypt.Tests
         {
             var srcString = "hmacsha encrypt";
 
-            //Ack
+            //Act
             var hashed = EncryptProvider.HMACSHA384(srcString, key).ToLower();
 
             //Assert
@@ -107,7 +107,7 @@ namespace NETCore.Encrypt.Tests
         {
             var srcString = "hmacsha encrypt";
 
-            //Ack
+            //Act
             var hashed = EncryptProvider.HMACSHA512(srcString, key);
 
             //Assert

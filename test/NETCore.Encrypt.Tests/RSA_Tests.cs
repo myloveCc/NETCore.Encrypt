@@ -12,7 +12,7 @@ namespace NETCore.Encrypt.Tests
         [Fact(DisplayName = "Create rsa key test")]
         public void Create_RSAKey_Test()
         {
-            //Ack
+            //Act
             var rsaKey = EncryptProvider.CreateRsaKey();
 
             //Assert
@@ -29,7 +29,7 @@ namespace NETCore.Encrypt.Tests
             var rsaKey = EncryptProvider.CreateRsaKey();
             var srcString = "rsa encrypt";
 
-            //Ack
+            //Act
             var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString);
 
             //Assert
@@ -62,7 +62,7 @@ namespace NETCore.Encrypt.Tests
             var rsaKey = EncryptProvider.CreateRsaKey();
             var srcString = "rsa decrypt";
 
-            //Ack
+            //Act
             var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString);
             var decrypted = EncryptProvider.RSADecrypt(rsaKey.PrivateKey, encrypted);
 
