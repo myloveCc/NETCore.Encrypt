@@ -25,6 +25,7 @@ namespace NETCore.Encrypt.Tests
         public void SHA1_Fail_Test()
         {
             var srcString = string.Empty;
+            
 
             //Assert
             Assert.Throws<ArgumentException>(() => EncryptProvider.Sha1(srcString));

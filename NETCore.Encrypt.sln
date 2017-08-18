@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2520DA96-86CD-4BD6-8807-95F27381BE1C}"
 EndProject
@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{858007F7-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETCore.Encrypt", "src\NETCore.Encrypt\NETCore.Encrypt.csproj", "{E761502C-AF51-4AA9-9776-0E3B157F3385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETCore.Encrypt.Demo", "example\NETCore.Encrypt.Demo\NETCore.Encrypt.Demo.csproj", "{C98B3A1A-B063-4A53-A8EB-1D8F2C448218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETCore.Encrypt.Demo", "example\NETCore.Encrypt.Demo\NETCore.Encrypt.Demo.csproj", "{C98B3A1A-B063-4A53-A8EB-1D8F2C448218}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETCore.Encrypt.Tests", "test\NETCore.Encrypt.Tests\NETCore.Encrypt.Tests.csproj", "{84CC81FB-9F15-49C2-B480-B6806033F7A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NETCore.Encrypt.Tests", "test\NETCore.Encrypt.Tests\NETCore.Encrypt.Tests.csproj", "{84CC81FB-9F15-49C2-B480-B6806033F7A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8A77A06-282D-4D55-B024-8FBC868306E6}"
 	ProjectSection(SolutionItems) = preProject
@@ -46,5 +46,8 @@ Global
 		{E761502C-AF51-4AA9-9776-0E3B157F3385} = {2520DA96-86CD-4BD6-8807-95F27381BE1C}
 		{C98B3A1A-B063-4A53-A8EB-1D8F2C448218} = {CF0D22DD-69A9-424C-963F-D23DCE937138}
 		{84CC81FB-9F15-49C2-B480-B6806033F7A6} = {858007F7-5623-4CF8-8621-26CC95F4B41E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20C14320-327E-4793-9081-BED6566B2709}
 	EndGlobalSection
 EndGlobal
