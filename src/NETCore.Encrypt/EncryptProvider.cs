@@ -620,6 +620,7 @@ namespace NETCore.Encrypt
 
         #region Base64
 
+
         #region Base64加密解密
         /// <summary>
         /// Base64 encrypt
