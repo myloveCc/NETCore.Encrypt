@@ -54,7 +54,7 @@ Install-Package NETCore.Encrypt -Version 2.0.0
     
   ## RSA
 
-  - #### Enum RsaSzie
+  - #### Enum RsaSize
 
     ```csharp
      public enum RsaSize
