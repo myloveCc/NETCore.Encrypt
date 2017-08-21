@@ -166,7 +166,27 @@ Install-Package NETCore.Encrypt -Version 2.0.0
     var srcString = "hmac sha hash";    
     var hashed = EncryptProvider.HMACSHA512(srcString，key);
     ```
-    
+
+  ## Base64 
+  
+  - #### Base64Encrypt
+    ```csharp
+    var srcString = "base64 string";    
+    var hashed = EncryptProvider.Base64Encrypt(srcString);   //default encoding is UTF-8
+    ```
+	```csharp
+    var srcString = "base64 string";    
+    var hashed = EncryptProvider.Base64Encrypt(srcString,Encoding.ASCII);  
+    ```
+  - #### Base64Decrypt
+    ```csharp  
+    var encryptedStr = "xxxxx";    
+    var hashed = EncryptProvider.Base64Decrypt(encryptedStr);   //default encoding is UTF-8
+    ```  
+	```csharp  
+    var encryptedStr = "xxxxx";    
+    var hashed = EncryptProvider.Base64Decrypt(srcString,Encoding.ASCII); 
+    ```  
 ***
 # Easy to use hash with `EncryptExtensions`
 
