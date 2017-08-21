@@ -92,18 +92,17 @@ namespace NETCore.Encrypt.Tests
             Assert.Throws<ArgumentException>(() => EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString));
         }
 
-        [Fact(DisplayName = "Rsa instance test")]
-        public void Rsa_Instance_Test()
+        [Fact(DisplayName = "Rsa from json string test")]
+        public void Rsa_From_JsonString_Test()
         {
             var rsaKey = EncryptProvider.CreateRsaKey();
 
             var publicKey = rsaKey.PublicKey;
             var privateKey = rsaKey.PrivateKey;
 
-            var rsa = EncryptProvider.RSAInstance(publicKey);
+            var rsa = EncryptProvider.RSAFromString(publicKey);
 
             Assert.NotNull(rsa);
-            Assert.Equal(2048, rsa.KeySize);
 
         }
     }

@@ -74,7 +74,7 @@ namespace NETCore.Encrypt.Extensions.Internal
         /// </summary>
         /// <param name="rsa">RSA实例<see cref="RSA"/></param>
         /// <param name="jsonString">RSA的Key序列化XML字符串</param>
-        public static void FromXmlString(this RSA rsa, string xmlString)
+        public static void FromLvccXmlString(this RSA rsa, string xmlString)
         {
             RSAParameters parameters = new RSAParameters();
 
@@ -112,7 +112,7 @@ namespace NETCore.Encrypt.Extensions.Internal
         /// <param name="rsa">RSA实例<see cref="RSA"/></param>
         /// <param name="includePrivateParameters">是否包含私钥</param>
         /// <returns></returns>
-        public static string ToXmlString(this RSA rsa, bool includePrivateParameters)
+        public static string ToLvccXmlString(this RSA rsa, bool includePrivateParameters)
         {
             RSAParameters parameters = rsa.ExportParameters(includePrivateParameters);
 

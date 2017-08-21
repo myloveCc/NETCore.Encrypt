@@ -258,7 +258,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            using (RSA rsa = RSA.Create(2048))
+            using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(publicKey);
                 byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.OaepSHA512);
@@ -276,7 +276,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            using (RSA rsa = RSA.Create(2048))
+            using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(privateKey);
                 byte[] srcBytes = srcString.ToBytes();
@@ -286,11 +286,11 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA Instance
+        /// RSA from json string
         /// </summary>
-        /// <param name="rsaKey"></param>
+        /// <param name="rsaKey">rsa json string</param>
         /// <returns></returns>
-        public static RSA RSAInstance(string rsaKey)
+        public static RSA RSAFromString(string rsaKey)
         {
             Check.Argument.IsNotEmpty(rsaKey, nameof(rsaKey));
             RSA rsa = RSA.Create();
@@ -302,12 +302,12 @@ namespace NETCore.Encrypt
         /// <summary>
         /// Create an RSA key 
         /// </summary>
+        /// <param name="keySizeInBits">the default size is 2048</param>
         /// <returns></returns>
-        public static RSAKey CreateRsaKey()
+        public static RSAKey CreateRsaKey(RsaSize rsaSize = RsaSize.R2048)
         {
-            using (RSA rsa = RSA.Create(2048))
+            using (RSA rsa = RSA.Create((int) rsaSize))
             {
-
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
 
