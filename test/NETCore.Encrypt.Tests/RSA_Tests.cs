@@ -9,11 +9,14 @@ namespace NETCore.Encrypt.Tests
     public class RSA_Tests
     {
 
-        [Fact(DisplayName = "Create rsa key test")]
-        public void Create_RSAKey_Test()
+        [Theory]
+        [InlineData(RsaSize.R2048)]
+        [InlineData(RsaSize.R3072)]
+        [InlineData(RsaSize.R4096)]
+        public void Create_RSAKey_Test(RsaSize size)
         {
             //Act
-            var rsaKey = EncryptProvider.CreateRsaKey();
+            var rsaKey = EncryptProvider.CreateRsaKey(size);
 
             //Assert
             Assert.NotNull(rsaKey);
@@ -23,10 +26,14 @@ namespace NETCore.Encrypt.Tests
             Assert.NotEmpty(rsaKey.Modulus);
         }
 
-        [Fact(DisplayName = "Rsa encrypt success")]
-        public void Rsa_Encrypt_Success_Test()
+        [Theory]
+ 
+        [InlineData(RsaSize.R2048)]
+        [InlineData(RsaSize.R3072)]
+        [InlineData(RsaSize.R4096)]
+        public void Rsa_Encrypt_Success_Test(RsaSize size)
         {
-            var rsaKey = EncryptProvider.CreateRsaKey();
+            var rsaKey = EncryptProvider.CreateRsaKey(size);
             var srcString = "rsa encrypt";
 
             //Act
@@ -56,10 +63,13 @@ namespace NETCore.Encrypt.Tests
             Assert.Throws<ArgumentException>(() => EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString));
         }
 
-        [Fact(DisplayName = "Rsa decrypt success")]
-        public void Rsa_Decrypt_Success_Test()
+        [Theory]
+        [InlineData(RsaSize.R2048)]
+        [InlineData(RsaSize.R3072)]
+        [InlineData(RsaSize.R4096)]
+        public void Rsa_Decrypt_Success_Test(RsaSize size)
         {
-            var rsaKey = EncryptProvider.CreateRsaKey();
+            var rsaKey = EncryptProvider.CreateRsaKey(size);
             var srcString = "rsa decrypt";
 
             //Act

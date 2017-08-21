@@ -53,11 +53,24 @@ Install-Package NETCore.Encrypt -Version 2.0.0
     ```
     
   ## RSA
-  
-  - #### Create RSA Key
+
+  - #### Enum RsaSzie
 
     ```csharp
-    var rsaKey = EncryptProvider.CreateRsaKey();
+     public enum RsaSize
+    {
+        R2048=2048,
+        R3072=3072,
+        R4096=4096
+    }
+    ```
+  
+  - #### Create RSA Key with RsaSize(update at version 2.0.1)
+
+    ```csharp
+    var rsaKey = EncryptProvider.CreateRsaKey();    //default is 2048
+
+	// var rsaKey = EncryptProvider.CreateRsaKey(RsaSize.R3072);
 
     var publicKey = rsaKey.PublicKey;
     var privateKey = rsaKey.PrivateKey;
@@ -80,6 +93,13 @@ Install-Package NETCore.Encrypt -Version 2.0.0
     var encryptedStr = "xxxx";
 
     var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
+    ```
+
+  - #### RSA from string (add at version 2.0.1)
+
+    ```csharp
+    var privateKey = rsaKey.PrivateKey;
+    RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
   
   ## MD5
