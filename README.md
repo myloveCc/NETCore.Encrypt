@@ -3,7 +3,7 @@ NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 ```
-Install-Package NETCore.Encrypt -Version 2.0.0
+Install-Package NETCore.Encrypt -Version 2.0.1
 ```
 
 ***
@@ -181,11 +181,11 @@ Install-Package NETCore.Encrypt -Version 2.0.0
   - #### Base64Decrypt
     ```csharp  
     var encryptedStr = "xxxxx";    
-    var hashed = EncryptProvider.Base64Decrypt(encryptedStr);   //default encoding is UTF-8
+    var strValue = EncryptProvider.Base64Decrypt(encryptedStr);   //default encoding is UTF-8
     ```  
 	```csharp  
     var encryptedStr = "xxxxx";    
-    var hashed = EncryptProvider.Base64Decrypt(srcString,Encoding.ASCII); 
+    var strValue = EncryptProvider.Base64Decrypt(srcString,Encoding.ASCII); 
     ```  
 ***
 # Easy to use hash with `EncryptExtensions`
