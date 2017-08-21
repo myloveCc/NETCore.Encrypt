@@ -43,7 +43,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < length; i++)
+            for (int i = 0;i < length;i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -258,10 +258,10 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            using (RSA rsa = RSA.Create())
+            using (RSA rsa = RSA.Create(2048))
             {
                 rsa.FromJsonString(publicKey);
-                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.OaepSHA1);
+                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.OaepSHA512);
                 return encryptBytes.ToHexString();
             }
         }
@@ -276,22 +276,38 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            using (RSA rsa = RSA.Create())
+            using (RSA rsa = RSA.Create(2048))
             {
                 rsa.FromJsonString(privateKey);
                 byte[] srcBytes = srcString.ToBytes();
-                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.OaepSHA1);
+                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.OaepSHA512);
                 return Encoding.UTF8.GetString(decryptBytes);
             }
         }
+
+        /// <summary>
+        /// RSA Instance
+        /// </summary>
+        /// <param name="rsaKey"></param>
+        /// <returns></returns>
+        public static RSA RSAInstance(string rsaKey)
+        {
+            Check.Argument.IsNotEmpty(rsaKey, nameof(rsaKey));
+            RSA rsa = RSA.Create();
+
+            rsa.FromJsonString(rsaKey);
+            return rsa;
+        }
+
         /// <summary>
         /// Create an RSA key 
         /// </summary>
         /// <returns></returns>
         public static RSAKey CreateRsaKey()
         {
-            using (RSA rsa = RSA.Create())
+            using (RSA rsa = RSA.Create(2048))
             {
+
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
 
@@ -609,7 +625,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0; i < random.Length; i++)
+            for (int i = 0;i < random.Length;i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
