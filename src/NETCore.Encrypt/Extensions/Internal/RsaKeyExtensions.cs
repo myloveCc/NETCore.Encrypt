@@ -25,19 +25,24 @@ namespace NETCore.Encrypt.Extensions.Internal
         {
             Check.Argument.IsNotEmpty(jsonString, nameof(jsonString));
 
-            var paramsJson = JsonConvert.DeserializeObject<RSAParametersJson>(jsonString);
-
             RSAParameters parameters = new RSAParameters();
+            try
+            {
+                var paramsJson = JsonConvert.DeserializeObject<RSAParametersJson>(jsonString);
 
-            parameters.Modulus = paramsJson.Modulus != null ? Convert.FromBase64String(paramsJson.Modulus) : null;
-            parameters.Exponent = paramsJson.Exponent != null ? Convert.FromBase64String(paramsJson.Exponent) : null;
-            parameters.P = paramsJson.P != null ? Convert.FromBase64String(paramsJson.P) : null;
-            parameters.Q = paramsJson.Q != null ? Convert.FromBase64String(paramsJson.Q) : null;
-            parameters.DP = paramsJson.DP != null ? Convert.FromBase64String(paramsJson.DP) : null;
-            parameters.DQ = paramsJson.DQ != null ? Convert.FromBase64String(paramsJson.DQ) : null;
-            parameters.InverseQ = paramsJson.InverseQ != null ? Convert.FromBase64String(paramsJson.InverseQ) : null;
-            parameters.D = paramsJson.D != null ? Convert.FromBase64String(paramsJson.D) : null;
-
+                parameters.Modulus = paramsJson.Modulus != null ? Convert.FromBase64String(paramsJson.Modulus) : null;
+                parameters.Exponent = paramsJson.Exponent != null ? Convert.FromBase64String(paramsJson.Exponent) : null;
+                parameters.P = paramsJson.P != null ? Convert.FromBase64String(paramsJson.P) : null;
+                parameters.Q = paramsJson.Q != null ? Convert.FromBase64String(paramsJson.Q) : null;
+                parameters.DP = paramsJson.DP != null ? Convert.FromBase64String(paramsJson.DP) : null;
+                parameters.DQ = paramsJson.DQ != null ? Convert.FromBase64String(paramsJson.DQ) : null;
+                parameters.InverseQ = paramsJson.InverseQ != null ? Convert.FromBase64String(paramsJson.InverseQ) : null;
+                parameters.D = paramsJson.D != null ? Convert.FromBase64String(paramsJson.D) : null;
+            }
+            catch
+            {
+                throw new Exception("Invalid XML RSA key.");
+            }
             rsa.ImportParameters(parameters);
         }
 
