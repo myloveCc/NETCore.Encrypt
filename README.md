@@ -2,11 +2,12 @@
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
 
+
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 ```
-Install-Package NETCore.Encrypt -Version 2.0.2
+Install-Package NETCore.Encrypt -Version 2.0.1
 ```
 
 ***
@@ -54,32 +55,8 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
-## DES
-
-- #### Create DES Key
-
-  ```csharp
-  
-  //des key length is 24 bit
-  var desKey = EncryptProvider.CreateDesKey();
-  
-  ```
-
-- #### DES encrypt
-
-    ```csharp
-    var srcString = "des encrypt";
-    var encrypted = EncryptProvider.DESEncrypt(srcString, key);
-    ```
     
-- #### DES decrypt
-
-    ```csharp
-    var encryptedStr = "xxxx";
-    var decrypted = EncryptProvider.DESDecrypt(encryptedStr, key);
-    ```
-
-## RSA
+  ## RSA
 
   - #### Enum RsaSize
 
@@ -212,7 +189,7 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     ```  
 	```csharp  
     var encryptedStr = "xxxxx";    
-    var strValue = EncryptProvider.Base64Decrypt(srcString,Encoding.ASCII); 
+    var strValue = EncryptProvider.Base64Decrypt(encryptedStr,Encoding.ASCII); 
     ```  
 ***
 # Easy to use hash with `EncryptExtensions`
