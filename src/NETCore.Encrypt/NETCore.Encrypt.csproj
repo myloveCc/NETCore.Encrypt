@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
-    <Version>2.0.1</Version>
-    <PackageReleaseNotes>Update CreateRsaKey, Add RSAFromString</PackageReleaseNotes>
+    <AssemblyVersion>2.0.2.0</AssemblyVersion>
+    <FileVersion>2.0.2.0</FileVersion>
+    <Version>2.0.2</Version>
+    <PackageReleaseNotes>Add des encrypt and decrypt.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
