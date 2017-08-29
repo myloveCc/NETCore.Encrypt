@@ -212,7 +212,7 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     ```  
 	```csharp  
     var encryptedStr = "xxxxx";    
-    var strValue = EncryptProvider.Base64Decrypt(srcString,Encoding.ASCII); 
+    var strValue = EncryptProvider.Base64Decrypt(encryptedStr,Encoding.ASCII); 
     ```  
 ***
 # Easy to use hash with `EncryptExtensions`
