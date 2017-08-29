@@ -1,6 +1,7 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
