@@ -54,7 +54,7 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
-## DES
+## DES (version 2.0.2)
 
 - #### Create DES Key
 
