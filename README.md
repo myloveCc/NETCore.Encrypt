@@ -53,20 +53,23 @@ Install-Package NETCore.Encrypt -Version 2.0.1
     ```
 ## DES
 
-#### Create DES Key
+- #### Create DES Key
 
   ```csharp
+  
   //des key length is 24 bit
   var desKey = EncryptProvider.CreateDesKey();
+  
   ```
 
-#### DES encrypt
+- #### DES encrypt
 
     ```csharp
     var srcString = "des encrypt";
     var encrypted = EncryptProvider.DESEncrypt(srcString, key);
     ```
-#### DES decrypt
+    
+- #### DES decrypt
 
     ```csharp
     var encryptedStr = "xxxx";
