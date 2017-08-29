@@ -41,7 +41,7 @@ namespace NETCore.Encrypt.Extensions.Internal
             }
             catch
             {
-                throw new Exception("Invalid XML RSA key.");
+                throw new Exception("Invalid Json RSA key.");
             }
             rsa.ImportParameters(parameters);
         }

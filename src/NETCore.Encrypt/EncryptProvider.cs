@@ -12,20 +12,7 @@ namespace NETCore.Encrypt
 {
     public class EncryptProvider
     {
-        #region AES
-
-        /// <summary>
-        /// create ase key
-        /// </summary>
-        /// <returns></returns>
-        public static AESKey CreateAesKey()
-        {
-            return new AESKey()
-            {
-                Key = GetRandomStr(32),
-                IV = GetRandomStr(16)
-            };
-        }
+        #region Common
 
         /// <summary>
         /// Generate a random key
@@ -49,6 +36,24 @@ namespace NETCore.Encrypt
             }
 
             return num.ToString();
+        }
+
+
+        #endregion
+
+        #region AES
+
+        /// <summary>
+        /// Create ase key
+        /// </summary>
+        /// <returns></returns>
+        public static AESKey CreateAesKey()
+        {
+            return new AESKey()
+            {
+                Key = GetRandomStr(32),
+                IV = GetRandomStr(16)
+            };
         }
 
         /// <summary>  
@@ -202,7 +207,7 @@ namespace NETCore.Encrypt
         /// <summary>  
         /// AES decrypt( no IV)  
         /// </summary>  
-        /// <param name="data">encrypted data</param>  
+        /// <param name="data">Encrypted data</param>  
         /// <param name="key">Key, requires 32 bits</param>  
         /// <returns>Decrypted string</returns>  
         public static string AESDecrypt(string data, string key)
@@ -230,8 +235,8 @@ namespace NETCore.Encrypt
                     {
                         try
                         {
-                            byte[] tmp = new byte[encryptedBytes.Length + 32];
-                            int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length + 32);
+                            byte[] tmp = new byte[encryptedBytes.Length ];
+                            int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
                             byte[] ret = new byte[len];
                             Array.Copy(tmp, 0, ret, 0, len);
                             return Encoding.UTF8.GetString(ret);
@@ -244,6 +249,101 @@ namespace NETCore.Encrypt
                 }
             }
         }
+        #endregion
+
+        #region DES
+
+        /// <summary>
+        /// Create des key
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateDesKey()
+        {
+            return GetRandomStr(24);
+        }
+
+        /// <summary>  
+        /// DES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <returns>Encrypted string</returns>  
+        public static string DESEncrypt(string data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
+            using (MemoryStream mStream = new MemoryStream())
+            {
+                using (TripleDES des = TripleDES.Create())
+                {
+                    byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+                    Byte[] bKey = new Byte[24];
+                    Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+                    des.Mode = CipherMode.ECB;
+                    des.Padding = PaddingMode.PKCS7;
+                    des.Key = bKey;
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, des.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        try
+                        {
+                            cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+                            cryptoStream.FlushFinalBlock();
+                            return Convert.ToBase64String(mStream.ToArray());
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>  
+        /// DES decrypt
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static string DESDecrypt(string data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
+            Byte[] encryptedBytes = Convert.FromBase64String(data);
+            Byte[] bKey = new Byte[24];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+            using (MemoryStream mStream = new MemoryStream(encryptedBytes))
+            {
+                using (TripleDES des = TripleDES.Create())
+                {
+                    des.Mode = CipherMode.ECB;
+                    des.Padding = PaddingMode.PKCS7;
+                    des.Key = bKey;
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, des.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        try
+                        {
+                            byte[] tmp = new byte[encryptedBytes.Length];
+                            int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
+                            byte[] ret = new byte[len];
+                            Array.Copy(tmp, 0, ret, 0, len);
+                            return Encoding.UTF8.GetString(ret);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region RSA
@@ -635,7 +735,6 @@ namespace NETCore.Encrypt
         #endregion
 
         #region Base64
-
 
         #region Base64加密解密
         /// <summary>
