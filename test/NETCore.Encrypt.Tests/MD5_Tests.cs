@@ -25,5 +25,16 @@ namespace NETCore.Encrypt.Tests
         {
             Assert.Throws<ArgumentException>(() => EncryptProvider.Md5(string.Empty));
         }
+        
+        [Fact(DisplayName = "MD5 with length success test")]
+        public void MD5_With_Length_Success_Test()
+        {
+            var srcString = "Md5 test";
+
+            var hashed = EncryptProvider.Md5(srcString, MD5Length.L16);
+
+            Assert.NotEmpty(hashed);
+            Assert.Equal("69c6ecadb32f5492", hashed.ToLower());
+        }
     }
 }
