@@ -139,6 +139,13 @@ Install-Package NETCore.Encrypt -Version 2.0.2
   
   ```
   
+  ```csharp
+  
+  var srcString = "Md5 hash";
+  var hashed = EncryptProvider.Md5(srcString, MD5Length.L16);
+  
+  ```
+  
   ## SHA
   
   - #### SHA1
