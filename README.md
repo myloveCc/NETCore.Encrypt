@@ -1,6 +1,7 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
+[![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
 
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
@@ -54,7 +55,7 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
-## DES
+## DES (version 2.0.2)
 
 - #### Create DES Key
 
@@ -135,6 +136,13 @@ Install-Package NETCore.Encrypt -Version 2.0.2
   
   var srcString = "Md5 hash";
   var hashed = EncryptProvider.Md5(srcString);
+  
+  ```
+  
+  ```csharp
+  
+  var srcString = "Md5 hash";
+  var hashed = EncryptProvider.Md5(srcString, MD5Length.L16);
   
   ```
   

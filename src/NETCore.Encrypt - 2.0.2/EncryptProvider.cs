@@ -423,35 +423,30 @@ namespace NETCore.Encrypt
         #endregion
 
         #region MD5
+
         /// <summary>
         /// MD5 hash
         /// </summary>
-        /// <param name="srcString">The string to be encrypted.</param>
-        /// <param name="length">The length of hash result , default value is <see cref="MD5Length.L32"/>.</param>
+        /// <param name="srcString">The string to be encrypted</param>
         /// <returns></returns>
-        public static string Md5(string srcString, MD5Length length = MD5Length.L32)
+        public static string Md5(string srcString)
         {
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
 
-            string str_md5_out = string.Empty;
             using (MD5 md5 = MD5.Create())
             {
                 byte[] bytes_md5_in = Encoding.UTF8.GetBytes(srcString);
                 byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
-
-                str_md5_out = length == MD5Length.L32
-                    ? BitConverter.ToString(bytes_md5_out) 
-                    : BitConverter.ToString(bytes_md5_out, 4, 8);
-               
+                string str_md5_out = BitConverter.ToString(bytes_md5_out);
                 str_md5_out = str_md5_out.Replace("-", "");
                 return str_md5_out;
             }
-        }        
+        }
         #endregion
 
         #region HMACMD5
         /// <summary>
-        /// HMACMD5 hash
+        /// MD5 hash
         /// </summary>
         /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
