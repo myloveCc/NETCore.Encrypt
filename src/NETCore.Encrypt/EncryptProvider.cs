@@ -361,7 +361,7 @@ namespace NETCore.Encrypt
             using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(publicKey);
-                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.OaepSHA512);
+                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.Pkcs1);
                 return encryptBytes.ToHexString();
             }
         }
@@ -380,7 +380,7 @@ namespace NETCore.Encrypt
             {
                 rsa.FromJsonString(privateKey);
                 byte[] srcBytes = srcString.ToBytes();
-                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.OaepSHA512);
+                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.Pkcs1);
                 return Encoding.UTF8.GetString(decryptBytes);
             }
         }
