@@ -30,7 +30,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0;i < length;i++)
+            for (int i = 0; i < length; i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -235,7 +235,7 @@ namespace NETCore.Encrypt
                     {
                         try
                         {
-                            byte[] tmp = new byte[encryptedBytes.Length ];
+                            byte[] tmp = new byte[encryptedBytes.Length];
                             int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
                             byte[] ret = new byte[len];
                             Array.Copy(tmp, 0, ret, 0, len);
@@ -406,8 +406,10 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         public static RSAKey CreateRsaKey(RsaSize rsaSize = RsaSize.R2048)
         {
-            using (RSA rsa = RSA.Create((int) rsaSize))
+            using (RSA rsa = RSA.Create())
             {
+                rsa.KeySize = (int)RsaSize.R2048;
+
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
 
@@ -440,13 +442,13 @@ namespace NETCore.Encrypt
                 byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
 
                 str_md5_out = length == MD5Length.L32
-                    ? BitConverter.ToString(bytes_md5_out) 
+                    ? BitConverter.ToString(bytes_md5_out)
                     : BitConverter.ToString(bytes_md5_out, 4, 8);
-               
+
                 str_md5_out = str_md5_out.Replace("-", "");
                 return str_md5_out;
             }
-        }        
+        }
         #endregion
 
         #region HMACMD5
@@ -730,7 +732,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0;i < random.Length;i++)
+            for (int i = 0; i < random.Length; i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
