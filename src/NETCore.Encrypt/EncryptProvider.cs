@@ -30,7 +30,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < length; i++)
+            for (int i = 0;i < length;i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -355,16 +355,31 @@ namespace NETCore.Encrypt
         /// <returns>encrypted string</returns>
         public static string RSAEncrypt(string publicKey, string srcString)
         {
+            string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1);
+            return encryptStr;
+        }
+
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="srcString">src string</param>
+        /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <returns>encrypted string</returns>
+        public static string RSAEncrypt(string publicKey, string srcString, RSAEncryptionPadding padding)
+        {
             Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
+            Check.Argument.IsNotNull(padding, nameof(padding));
 
             using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(publicKey);
-                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), RSAEncryptionPadding.Pkcs1);
+                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), padding);
                 return encryptBytes.ToHexString();
             }
         }
+
         /// <summary>
         /// RSA decrypt
         /// </summary>
@@ -373,8 +388,22 @@ namespace NETCore.Encrypt
         /// <returns>Decrypted string</returns>
         public static string RSADecrypt(string privateKey, string srcString)
         {
+            string decryptStr = RSADecrypt(privateKey, srcString, RSAEncryptionPadding.Pkcs1);
+            return decryptStr;
+        }
+
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="srcString">src string</param>
+        /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <returns>encrypted string</returns>
+        public static string RSADecrypt(string privateKey, string srcString, RSAEncryptionPadding padding)
+        {
             Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
+            Check.Argument.IsNotNull(padding, nameof(padding));
 
             using (RSA rsa = RSA.Create())
             {
@@ -408,7 +437,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int)RsaSize.R2048;
+                rsa.KeySize = (int) RsaSize.R2048;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
@@ -732,7 +761,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0; i < random.Length; i++)
+            for (int i = 0;i < random.Length;i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
