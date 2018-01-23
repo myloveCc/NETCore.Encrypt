@@ -115,7 +115,7 @@ Install-Package NETCore.Encrypt -Version 2.0.5
     
     var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString);
 
-    // On mac/linux at version 2.0.5
+    // On mac/linux with openssl at version 2.0.5
     var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1);
     ```
   
@@ -127,7 +127,7 @@ Install-Package NETCore.Encrypt -Version 2.0.5
 
     var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
 
-    // On mac/linux at version 2.0.5
+    // On mac/linux with openssl at version 2.0.5
     var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr, RSAEncryptionPadding.Pkcs1);
     ```
 
