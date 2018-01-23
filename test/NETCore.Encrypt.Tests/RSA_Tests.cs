@@ -53,7 +53,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "rsa encrypt";
 
             //Act
-            var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString, RSAEncryptionPadding.OaepSHA512);
+            var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString, RSAEncryptionPadding.Pkcs1);
 
             //Assert
             Assert.NotEmpty(encrypted);
@@ -110,7 +110,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "rsa decrypt";
 
             //Act
-            var padding = RSAEncryptionPadding.OaepSHA512;
+            var padding = RSAEncryptionPadding.Pkcs1;
             var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString, padding);
             var decrypted = EncryptProvider.RSADecrypt(rsaKey.PrivateKey, encrypted, padding);
 
