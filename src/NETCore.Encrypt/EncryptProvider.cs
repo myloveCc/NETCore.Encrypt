@@ -355,7 +355,7 @@ namespace NETCore.Encrypt
         /// <returns>encrypted string</returns>
         public static string RSAEncrypt(string publicKey, string srcString)
         {
-            string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1);
+            string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.OaepSHA512);
             return encryptStr;
         }
 
@@ -388,7 +388,7 @@ namespace NETCore.Encrypt
         /// <returns>Decrypted string</returns>
         public static string RSADecrypt(string privateKey, string srcString)
         {
-            string decryptStr = RSADecrypt(privateKey, srcString, RSAEncryptionPadding.Pkcs1);
+            string decryptStr = RSADecrypt(privateKey, srcString, RSAEncryptionPadding.OaepSHA512);
             return decryptStr;
         }
 
