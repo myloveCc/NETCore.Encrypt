@@ -409,7 +409,7 @@ namespace NETCore.Encrypt
             {
                 rsa.FromJsonString(privateKey);
                 byte[] srcBytes = srcString.ToBytes();
-                byte[] decryptBytes = rsa.Decrypt(srcBytes, RSAEncryptionPadding.Pkcs1);
+                byte[] decryptBytes = rsa.Decrypt(srcBytes, padding);
                 return Encoding.UTF8.GetString(decryptBytes);
             }
         }
