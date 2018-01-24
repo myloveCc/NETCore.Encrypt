@@ -437,7 +437,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int) RsaSize.R2048;
+                rsa.KeySize = (int) rsaSize;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
