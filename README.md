@@ -1,13 +1,14 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
+[![NetStandard 2.0](https://img.shields.io/badge/NetStandard-2.0-orange.svg)](https://www.microsoft.com/net/core)
 [![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
 
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 ```
-Install-Package NETCore.Encrypt -Version 2.0.2
+Install-Package NETCore.Encrypt -Version 2.0.5
 ```
 
 ***
@@ -111,7 +112,11 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     var publicKey = rsaKey.PublicKey;
     var srcString = "rsa encrypt";
 
+    
     var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString);
+
+    // On mac/linux at version 2.0.5
+    var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1);
     ```
   
   - #### RSA decrypt
@@ -121,6 +126,9 @@ Install-Package NETCore.Encrypt -Version 2.0.2
     var encryptedStr = "xxxx";
 
     var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
+
+    // On mac/linux at version 2.0.5
+    var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr, RSAEncryptionPadding.Pkcs1);
     ```
 
   - #### RSA from string (add at version 2.0.1)

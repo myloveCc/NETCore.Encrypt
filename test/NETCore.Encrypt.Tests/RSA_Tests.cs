@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using NETCore.Encrypt;
+using System.Security.Cryptography;
 
 namespace NETCore.Encrypt.Tests
 {
@@ -27,7 +28,6 @@ namespace NETCore.Encrypt.Tests
         }
 
         [Theory]
- 
         [InlineData(RsaSize.R2048)]
         [InlineData(RsaSize.R3072)]
         [InlineData(RsaSize.R4096)]
@@ -42,6 +42,23 @@ namespace NETCore.Encrypt.Tests
             //Assert
             Assert.NotEmpty(encrypted);
         }
+
+        [Theory(DisplayName = "Rsa encrypt with custom RSAEncryptionPadding")]
+        [InlineData(RsaSize.R2048)]
+        [InlineData(RsaSize.R3072)]
+        [InlineData(RsaSize.R4096)]
+        public void Rsa_Encrypt_WithPadding_Test(RsaSize size)
+        {
+            var rsaKey = EncryptProvider.CreateRsaKey(size);
+            var srcString = "rsa encrypt";
+
+            //Act
+            var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString, RSAEncryptionPadding.Pkcs1);
+
+            //Assert
+            Assert.NotEmpty(encrypted);
+        }
+
 
         [Fact(DisplayName = "Rsa encrypt fail with emtpy key")]
         public void Rsa_Encrypt_EmptyKey_Test()
@@ -81,6 +98,28 @@ namespace NETCore.Encrypt.Tests
             Assert.NotEmpty(decrypted);
             Assert.Equal(srcString, decrypted);
         }
+
+
+        [Theory(DisplayName = "Rsa decrypt with custom RSAEncryptionPadding")]
+        [InlineData(RsaSize.R2048)]
+        [InlineData(RsaSize.R3072)]
+        [InlineData(RsaSize.R4096)]
+        public void Rsa_Decrypt_WithPadding_Test(RsaSize size)
+        {
+            var rsaKey = EncryptProvider.CreateRsaKey(size);
+            var srcString = "rsa decrypt";
+
+            //Act
+            var padding = RSAEncryptionPadding.Pkcs1;
+            var encrypted = EncryptProvider.RSAEncrypt(rsaKey.PublicKey, srcString, padding);
+            var decrypted = EncryptProvider.RSADecrypt(rsaKey.PrivateKey, encrypted, padding);
+
+            //Assert
+            Assert.NotEmpty(encrypted);
+            Assert.NotEmpty(decrypted);
+            Assert.Equal(srcString, decrypted);
+        }
+
 
         [Fact(DisplayName = "Rsa decrypt fail with emtpy key")]
         public void Rsa_Decrypt_EmptyKey_Test()
