@@ -128,7 +128,7 @@ Install-Package NETCore.Encrypt -Version 2.0.5
     var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr);
 
     // On mac/linux at version 2.0.5
-    var encrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr, RSAEncryptionPadding.Pkcs1);
+    var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr, RSAEncryptionPadding.Pkcs1);
     ```
 
   - #### RSA from string (add at version 2.0.1)
