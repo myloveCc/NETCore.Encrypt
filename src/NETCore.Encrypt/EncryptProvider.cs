@@ -19,7 +19,19 @@ namespace NETCore.Encrypt
         /// </summary>
         /// <param name="n">key length，IV is 16，Key is 32</param>
         /// <returns>return random value</returns>
-        private static string GetRandomStr(int length)
+        public static string GetRandomStr(int length)
+        {
+
+            byte[] num = new Byte[length];
+
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            rng.GetBytes(num);
+
+            return Encoding.ASCII.GetString(num);
+
+        }
+
+        public static string GetRandomStr2(int length)
         {
             char[] arrChar = new char[]{
            'a','b','d','c','e','f','g','h','i','j','k','l','m','n','p','r','q','s','t','u','v','w','z','y','x',
@@ -30,14 +42,15 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0;i < length;i++)
+
+            for (int i = 0; i < length; i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
 
             return num.ToString();
-        }
 
+        }
 
         #endregion
 
@@ -47,12 +60,12 @@ namespace NETCore.Encrypt
         /// Create ase key
         /// </summary>
         /// <returns></returns>
-        public static AESKey CreateAesKey()
+        public static AESKey CreateAesKey(bool secureRandom = true)
         {
             return new AESKey()
             {
-                Key = GetRandomStr(32),
-                IV = GetRandomStr(16)
+                Key = secureRandom ? GetRandomStr(32) : GetRandomStr2(32),
+                IV = secureRandom ? GetRandomStr(16) : GetRandomStr2(16)
             };
         }
 
@@ -259,7 +272,7 @@ namespace NETCore.Encrypt
         /// <returns></returns>
         public static string CreateDesKey()
         {
-            return GetRandomStr(24);
+            return GetRandomStr2(24);
         }
 
         /// <summary>  
@@ -437,7 +450,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int) rsaSize;
+                rsa.KeySize = (int)rsaSize;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
@@ -761,7 +774,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0;i < random.Length;i++)
+            for (int i = 0; i < random.Length; i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
