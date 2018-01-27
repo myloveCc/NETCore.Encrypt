@@ -262,6 +262,200 @@ namespace NETCore.Encrypt
                 }
             }
         }
+
+        /// <summary>  
+        /// AES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted string</returns>  
+        public static byte[] AESEncrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] plainBytes = data;
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+            Byte[] bVector = new Byte[16];
+            Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+
+            Byte[] Cryptograph = null; // encrypted data
+            using (Aes Aes = Aes.Create())
+            {
+                try
+                {
+                    using (MemoryStream Memory = new MemoryStream())
+                    {
+                        using (CryptoStream Encryptor = new CryptoStream(Memory,
+                         Aes.CreateEncryptor(bKey, bVector),
+                         CryptoStreamMode.Write))
+                        {
+                            Encryptor.Write(plainBytes, 0, plainBytes.Length);
+                            Encryptor.FlushFinalBlock();
+
+                            Cryptograph = Memory.ToArray();
+                        }
+                    }
+                }
+                catch
+                {
+                    Cryptograph = null;
+                }
+                return Cryptograph;
+            }
+        }
+
+        /// <summary>  
+        ///  AES decrypt
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static byte[] AESDecrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] encryptedBytes = data;
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+            Byte[] bVector = new Byte[16];
+            Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+
+            Byte[] original = null; // decrypted data
+
+            using (Aes Aes = Aes.Create())
+            {
+                try
+                {
+                    using (MemoryStream Memory = new MemoryStream(encryptedBytes))
+                    {
+                        using (CryptoStream Decryptor = new CryptoStream(Memory, Aes.CreateDecryptor(bKey, bVector), CryptoStreamMode.Read))
+                        {
+                            using (MemoryStream originalMemory = new MemoryStream())
+                            {
+                                Byte[] Buffer = new Byte[1024];
+                                Int32 readBytes = 0;
+                                while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
+                                {
+                                    originalMemory.Write(Buffer, 0, readBytes);
+                                }
+
+                                original = originalMemory.ToArray();
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    original = null;
+                }
+                return original;
+            }
+        }
+
+        /// <summary>  
+        /// AES encrypt ( no IV)  
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <returns>Encrypted string</returns>  
+        public static byte[] AESEncrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            using (MemoryStream mStream = new MemoryStream())
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    byte[] plainBytes = data;
+                    Byte[] bKey = new Byte[32];
+                    Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+                    aes.Mode = CipherMode.ECB;
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 128;
+                    //aes.Key = _key;  
+                    aes.Key = bKey;
+                    //aes.IV = _iV; 
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        try
+                        {
+                            cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+                            cryptoStream.FlushFinalBlock();
+                            return mStream.ToArray();
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>  
+        /// AES decrypt( no IV)  
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static byte[] AESDecrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Byte[] encryptedBytes = data;
+            Byte[] bKey = new Byte[32];
+            Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
+
+            using (MemoryStream mStream = new MemoryStream(encryptedBytes))
+            {
+                //mStream.Write( encryptedBytes, 0, encryptedBytes.Length );  
+                //mStream.Seek( 0, SeekOrigin.Begin );  
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Mode = CipherMode.ECB;
+                    aes.Padding = PaddingMode.PKCS7;
+                    aes.KeySize = 128;
+                    aes.Key = bKey;
+                    //aes.IV = _iV;  
+                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        try
+                        {
+                            byte[] tmp = new byte[encryptedBytes.Length];
+                            int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
+                            byte[] ret = new byte[len];
+                            Array.Copy(tmp, 0, ret, 0, len);
+                            return ret;
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
         #endregion
 
         #region DES

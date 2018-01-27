@@ -2,6 +2,7 @@
 using NETCore.Encrypt.Internal;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace NETCore.Encrypt.Demo
 {
@@ -37,7 +38,7 @@ namespace NETCore.Encrypt.Demo
             Console.Read();
             */
 
-            var plaintext = "Hello world";
+            var plaintext = "Hello world 123456789/*-+!@#$%^&*()-=_+";
             var encrypted = EncryptProvider.AESEncrypt(plaintext, key, iv);
             var decrypted = EncryptProvider.AESDecrypt(encrypted, key, iv);
 
@@ -45,12 +46,21 @@ namespace NETCore.Encrypt.Demo
             Console.WriteLine();
 
             Console.WriteLine("** AES SecureRandom **");
-            Console.WriteLine("Encrypted: " + encrypted);
-            Console.WriteLine("Decrypted: " + decrypted);
-            Console.WriteLine("Key: {0} IV: {1}", key, iv);
-
+            Console.WriteLine("Encrypted " + " (Length: " + encrypted.Length + ") " + encrypted);
+            Console.WriteLine("Decrypted " + " (Length: " + decrypted.Length + ") " + decrypted);
+            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
 
             Console.WriteLine();
+            Console.WriteLine("** AES SecureRandom with Byte input/output **");
+            byte[] bencrypted = EncryptProvider.AESEncrypt(Encoding.UTF8.GetBytes(plaintext), key, iv);
+            byte[] bdecrypted = EncryptProvider.AESDecrypt(bencrypted, key, iv);
+
+            Console.WriteLine("Encrypted " + " (Length: " + bencrypted.Length + ") " + Encoding.UTF8.GetString(bencrypted));
+            Console.WriteLine("Decrypted " + " (Length: " + bdecrypted.Length + ") " + Encoding.UTF8.GetString(bdecrypted));
+            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
+
+            Console.WriteLine();
+
             Console.WriteLine("** AES Non-SecureRandom **");
 
             aesKey = EncryptProvider.CreateAesKey(false);
@@ -59,9 +69,9 @@ namespace NETCore.Encrypt.Demo
 
             encrypted = EncryptProvider.AESEncrypt(plaintext, key, iv);
             decrypted = EncryptProvider.AESDecrypt(encrypted, key, iv);
-            Console.WriteLine("Encrypted: " + encrypted);
-            Console.WriteLine("Decrypted: " + decrypted);
-            Console.WriteLine("Key: {0} IV: {1}", key, iv);
+            Console.WriteLine("Encrypted " + " (Length: " + encrypted.Length + ") " + encrypted);
+            Console.WriteLine("Decrypted " + " (Length: " + decrypted.Length + ") " + decrypted);
+            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
 
             Console.WriteLine();
             Console.WriteLine("** RSA **");
