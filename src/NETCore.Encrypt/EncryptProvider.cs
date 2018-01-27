@@ -24,8 +24,8 @@ namespace NETCore.Encrypt
 
             byte[] num = new Byte[length];
 
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(num);
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                rng.GetBytes(num);
 
             return Encoding.ASCII.GetString(num);
 
