@@ -331,11 +331,33 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(key, nameof(key));
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
+            byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+            var encryptBytes = DESEncrypt(plainBytes, key);
+
+            if (encryptBytes == null)
+            {
+                return null;
+            }
+            return Convert.ToBase64String(encryptBytes);
+        }
+
+        /// <summary>  
+        /// DES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <returns>Encrypted byte array</returns>  
+        public static byte[] DESEncrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
             using (MemoryStream Memory = new MemoryStream())
             {
                 using (TripleDES des = TripleDES.Create())
                 {
-                    byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+                    Byte[] plainBytes = data;
                     Byte[] bKey = new Byte[24];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
@@ -348,7 +370,7 @@ namespace NETCore.Encrypt
                         {
                             cryptoStream.Write(plainBytes, 0, plainBytes.Length);
                             cryptoStream.FlushFinalBlock();
-                            return Convert.ToBase64String(Memory.ToArray());
+                            return Memory.ToArray();
                         }
                         catch (Exception ex)
                         {
@@ -372,6 +394,28 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
             Byte[] encryptedBytes = Convert.FromBase64String(data);
+            Byte[] bytes = DESDecrypt(encryptedBytes, key);
+
+            if (bytes == null)
+            {
+                return null;
+            }
+            return Encoding.UTF8.GetString(bytes);   
+        }
+
+        /// <summary>  
+        /// DES decrypt
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <returns>Decrypted byte array</returns>  
+        public static byte[] DESDecrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
+            Byte[] encryptedBytes = data;
             Byte[] bKey = new Byte[24];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
@@ -390,7 +434,7 @@ namespace NETCore.Encrypt
                             int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
                             byte[] ret = new byte[len];
                             Array.Copy(tmp, 0, ret, 0, len);
-                            return Encoding.UTF8.GetString(ret);
+                            return ret;
                         }
                         catch
                         {
