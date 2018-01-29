@@ -90,10 +90,10 @@ Install-Package NETCore.Encrypt -Version 2.0.6
     ```
 - #### DES encrypt bytes at version 2.0.6
    
-```csharp
-var srcBytes =  new byte[]{xxx};
-var decryptedBytes = EncryptProvider.DESEncrypt(srcBytes, key);
-```
+    ```csharp
+    var srcBytes =  new byte[]{xxx};
+    var decryptedBytes = EncryptProvider.DESEncrypt(srcBytes, key);
+    ```
 - #### DES decrypt
 
     ```csharp
@@ -103,10 +103,10 @@ var decryptedBytes = EncryptProvider.DESEncrypt(srcBytes, key);
 
 - #### DES decrypt bytes at version 2.0.6
    
-```csharp
-var encryptedBytes =  new byte[]{xxx};
-var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
-```
+    ```csharp
+    var encryptedBytes =  new byte[]{xxx};
+    var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
+    ```
 
 ## RSA
 
