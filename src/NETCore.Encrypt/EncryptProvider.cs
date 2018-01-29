@@ -30,7 +30,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0;i < length;i++)
+            for (int i = 0; i < length; i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -74,6 +74,33 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
 
             Byte[] plainBytes = Encoding.UTF8.GetBytes(data);
+
+            var encryptBytes = AESEncrypt(plainBytes, key, vector);
+            if (encryptBytes == null)
+            {
+                return null;
+            }
+            return Convert.ToBase64String(encryptBytes);
+        }
+
+        /// <summary>
+        /// AES encrypt
+        /// </summary>
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted byte array</returns>  
+        public static byte[] AESEncrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] plainBytes = data;
             Byte[] bKey = new Byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
             Byte[] bVector = new Byte[16];
@@ -101,7 +128,7 @@ namespace NETCore.Encrypt
                 {
                     encryptData = null;
                 }
-                return Convert.ToBase64String(encryptData);
+                return encryptData;
             }
         }
 
@@ -123,6 +150,35 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
 
             Byte[] encryptedBytes = Convert.FromBase64String(data);
+
+            Byte[] decryptBytes = AESDecrypt(encryptedBytes, key, vector);
+
+            if (decryptBytes == null)
+            {
+                return null;
+            }
+            return Encoding.UTF8.GetString(decryptBytes);
+        }
+
+        /// <summary>  
+        ///  AES decrypt
+        /// </summary>  
+        /// <param name="data">Encrypted data</param>  
+        /// <param name="key">Key, requires 32 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Decrypted byte array</returns>  
+
+        public static byte[] AESDecrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+
+            Byte[] encryptedBytes = data;
             Byte[] bKey = new Byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
             Byte[] bVector = new Byte[16];
@@ -156,7 +212,8 @@ namespace NETCore.Encrypt
                 {
                     decryptedData = null;
                 }
-                return Encoding.UTF8.GetString(decryptedData);
+
+                return decryptedData;
             }
         }
 
@@ -437,7 +494,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int) rsaSize;
+                rsa.KeySize = (int)rsaSize;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
@@ -761,7 +818,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0;i < random.Length;i++)
+            for (int i = 0; i < random.Length; i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
