@@ -45,16 +45,16 @@ namespace NETCore.Encrypt.Demo
             Console.WriteLine("** AES SecureRandom **");
             Console.WriteLine("Encrypted " + " (Length: " + encrypted.Length + ") " + encrypted);
             Console.WriteLine("Decrypted " + " (Length: " + decrypted.Length + ") " + decrypted);
-            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
+            Console.WriteLine("Key: {0} IV: {1}", key, iv);
 
             Console.WriteLine();
             Console.WriteLine("** AES SecureRandom with Byte input/output **");
-            //byte[] bencrypted = EncryptProvider.AESEncrypt(Encoding.UTF8.GetBytes(plaintext), key, iv);
-            //byte[] bdecrypted = EncryptProvider.AESDecrypt(bencrypted, key, iv);
+            byte[] bencrypted = EncryptProvider.AESEncrypt(Encoding.UTF8.GetBytes(plaintext), key, iv);
+            byte[] bdecrypted = EncryptProvider.AESDecrypt(bencrypted, key, iv);
 
-            //Console.WriteLine("Encrypted " + " (Length: " + bencrypted.Length + ") " + Encoding.UTF8.GetString(bencrypted));
-            //Console.WriteLine("Decrypted " + " (Length: " + bdecrypted.Length + ") " + Encoding.UTF8.GetString(bdecrypted));
-            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
+            Console.WriteLine("Encrypted " + " (Length: " + bencrypted.Length + ") " + Encoding.UTF8.GetString(bencrypted));
+            Console.WriteLine("Decrypted " + " (Length: " + bdecrypted.Length + ") " + Encoding.UTF8.GetString(bdecrypted));
+            Console.WriteLine("Key: {0} IV: {1}", key, iv);
 
             Console.WriteLine();
 
@@ -68,7 +68,7 @@ namespace NETCore.Encrypt.Demo
             decrypted = EncryptProvider.AESDecrypt(encrypted, key, iv);
             Console.WriteLine("Encrypted " + " (Length: " + encrypted.Length + ") " + encrypted);
             Console.WriteLine("Decrypted " + " (Length: " + decrypted.Length + ") " + decrypted);
-            //Console.WriteLine("Key: {0} IV: {1}", key, iv);
+            Console.WriteLine("Key: {0} IV: {1}", key, iv);
 
             Console.WriteLine();
             Console.WriteLine("** RSA **");
