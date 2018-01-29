@@ -8,7 +8,7 @@ NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 ```
-Install-Package NETCore.Encrypt -Version 2.0.5
+Install-Package NETCore.Encrypt -Version 2.0.6
 ```
 
 ***
@@ -41,6 +41,13 @@ Install-Package NETCore.Encrypt -Version 2.0.5
     var encrypted = EncryptProvider.AESEncrypt(srcString, key, iv);
 
     ```
+  - AES encrypt bytes at version 2.0.6
+
+    ```csharp
+    var srcBytes = new byte[]{xxx};
+    var encryptedBytes = EncryptProvider.AESEncrypt(srcBytes, key, iv);
+
+    ```
 #### ASE decrypt
 
   - AES decrypt without iv
@@ -56,6 +63,14 @@ Install-Package NETCore.Encrypt -Version 2.0.5
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
+
+  - AES decrypt bytes at version 2.0.6
+   
+    ```csharp
+    var encryptedBytes =  new byte[]{xxx};
+    var decryptedBytes = EncryptProvider.AESDecrypt(encryptedBytes, key, iv);
+    ```
+
 ## DES (version 2.0.2)
 
 - #### Create DES Key
@@ -73,12 +88,24 @@ Install-Package NETCore.Encrypt -Version 2.0.5
     var srcString = "des encrypt";
     var encrypted = EncryptProvider.DESEncrypt(srcString, key);
     ```
-    
+  - DES encrypt bytes at version 2.0.6
+   
+    ```csharp
+    var srcBytes =  new byte[]{xxx};
+    var decryptedBytes = EncryptProvider.DESEncrypt(srcBytes, key);
+    ```
 - #### DES decrypt
 
     ```csharp
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.DESDecrypt(encryptedStr, key);
+    ```
+
+  - DES decrypt bytes at version 2.0.6
+   
+    ```csharp
+    var encryptedBytes =  new byte[]{xxx};
+    var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
     ```
 
 ## RSA
