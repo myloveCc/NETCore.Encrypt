@@ -79,7 +79,7 @@ namespace NETCore.Encrypt
             Byte[] bVector = new Byte[16];
             Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
 
-            Byte[] Cryptograph = null; // encrypted data
+            Byte[] encryptData = null; // encrypted data
             using (Aes Aes = Aes.Create())
             {
                 try
@@ -93,15 +93,15 @@ namespace NETCore.Encrypt
                             Encryptor.Write(plainBytes, 0, plainBytes.Length);
                             Encryptor.FlushFinalBlock();
 
-                            Cryptograph = Memory.ToArray();
+                            encryptData = Memory.ToArray();
                         }
                     }
                 }
                 catch
                 {
-                    Cryptograph = null;
+                    encryptData = null;
                 }
-                return Convert.ToBase64String(Cryptograph);
+                return Convert.ToBase64String(encryptData);
             }
         }
 
@@ -128,7 +128,7 @@ namespace NETCore.Encrypt
             Byte[] bVector = new Byte[16];
             Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
 
-            Byte[] original = null; // decrypted data
+            Byte[] decryptedData = null; // decrypted data
 
             using (Aes Aes = Aes.Create())
             {
@@ -138,25 +138,25 @@ namespace NETCore.Encrypt
                     {
                         using (CryptoStream Decryptor = new CryptoStream(Memory, Aes.CreateDecryptor(bKey, bVector), CryptoStreamMode.Read))
                         {
-                            using (MemoryStream originalMemory = new MemoryStream())
+                            using (MemoryStream tempMemory = new MemoryStream())
                             {
                                 Byte[] Buffer = new Byte[1024];
                                 Int32 readBytes = 0;
                                 while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
                                 {
-                                    originalMemory.Write(Buffer, 0, readBytes);
+                                    tempMemory.Write(Buffer, 0, readBytes);
                                 }
 
-                                original = originalMemory.ToArray();
+                                decryptedData = tempMemory.ToArray();
                             }
                         }
                     }
                 }
                 catch
                 {
-                    original = null;
+                    decryptedData = null;
                 }
-                return Encoding.UTF8.GetString(original);
+                return Encoding.UTF8.GetString(decryptedData);
             }
         }
 
@@ -173,7 +173,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(key, nameof(key));
             Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
 
-            using (MemoryStream mStream = new MemoryStream())
+            using (MemoryStream Memory = new MemoryStream())
             {
                 using (Aes aes = Aes.Create())
                 {
@@ -187,13 +187,13 @@ namespace NETCore.Encrypt
                     //aes.Key = _key;  
                     aes.Key = bKey;
                     //aes.IV = _iV; 
-                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         try
                         {
                             cryptoStream.Write(plainBytes, 0, plainBytes.Length);
                             cryptoStream.FlushFinalBlock();
-                            return Convert.ToBase64String(mStream.ToArray());
+                            return Convert.ToBase64String(Memory.ToArray());
                         }
                         catch (Exception ex)
                         {
@@ -220,7 +220,7 @@ namespace NETCore.Encrypt
             Byte[] bKey = new Byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
-            using (MemoryStream mStream = new MemoryStream(encryptedBytes))
+            using (MemoryStream Memory = new MemoryStream(encryptedBytes))
             {
                 //mStream.Write( encryptedBytes, 0, encryptedBytes.Length );  
                 //mStream.Seek( 0, SeekOrigin.Begin );  
@@ -231,7 +231,7 @@ namespace NETCore.Encrypt
                     aes.KeySize = 128;
                     aes.Key = bKey;
                     //aes.IV = _iV;  
-                    using (CryptoStream cryptoStream = new CryptoStream(mStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateDecryptor(), CryptoStreamMode.Read))
                     {
                         try
                         {
@@ -274,7 +274,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(key, nameof(key));
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
-            using (MemoryStream mStream = new MemoryStream())
+            using (MemoryStream Memory = new MemoryStream())
             {
                 using (TripleDES des = TripleDES.Create())
                 {
@@ -285,13 +285,13 @@ namespace NETCore.Encrypt
                     des.Mode = CipherMode.ECB;
                     des.Padding = PaddingMode.PKCS7;
                     des.Key = bKey;
-                    using (CryptoStream cryptoStream = new CryptoStream(mStream, des.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         try
                         {
                             cryptoStream.Write(plainBytes, 0, plainBytes.Length);
                             cryptoStream.FlushFinalBlock();
-                            return Convert.ToBase64String(mStream.ToArray());
+                            return Convert.ToBase64String(Memory.ToArray());
                         }
                         catch (Exception ex)
                         {
@@ -318,14 +318,14 @@ namespace NETCore.Encrypt
             Byte[] bKey = new Byte[24];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
-            using (MemoryStream mStream = new MemoryStream(encryptedBytes))
+            using (MemoryStream Memory = new MemoryStream(encryptedBytes))
             {
                 using (TripleDES des = TripleDES.Create())
                 {
                     des.Mode = CipherMode.ECB;
                     des.Padding = PaddingMode.PKCS7;
                     des.Key = bKey;
-                    using (CryptoStream cryptoStream = new CryptoStream(mStream, des.CreateDecryptor(), CryptoStreamMode.Read))
+                    using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateDecryptor(), CryptoStreamMode.Read))
                     {
                         try
                         {
