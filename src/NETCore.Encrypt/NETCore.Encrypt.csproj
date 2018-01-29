@@ -12,10 +12,12 @@
     <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <AssemblyVersion>2.0.5.0</AssemblyVersion>
-    <FileVersion>2.0.5.0</FileVersion>
-    <Version>2.0.5</Version>
-    <PackageReleaseNotes>Add new RSAEncrypt,RSADecrypt method for custom RSAEncryptionPadding</PackageReleaseNotes>
+    <AssemblyVersion>2.0.6.0</AssemblyVersion>
+    <FileVersion>2.0.6.0</FileVersion>
+    <Version>2.0.6</Version>
+    <PackageReleaseNotes>1: Add demo about how to use.
+2: Add new method for aes/des with byte[] encrypt/decrypt.
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
