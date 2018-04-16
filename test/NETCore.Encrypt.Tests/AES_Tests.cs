@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Xunit;
 
@@ -186,6 +187,52 @@ namespace NETCore.Encrypt.Tests
 
             //Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESDecrypt(srcString, key, iv));
+        }
+
+        [Fact(DisplayName = "AES encrypt and decrypt about file stream")]
+        public void Aes_File_Test()
+        {
+            var rootDir = Path.Combine(AppContext.BaseDirectory, "Assets");
+            if (!Directory.Exists(rootDir))
+            {
+                Directory.CreateDirectory(rootDir);
+            }
+
+            var file = Path.Combine(rootDir, "AES_File_Test.txt");
+            if (!File.Exists(file))
+            {
+                using (var fileStream = File.OpenWrite(file))
+                {
+                    var tempDatas = Encoding.UTF8.GetBytes("May be you shoud get all the buffer of file,and then decrypt by EncryptProvider.");
+                    fileStream.Write(tempDatas, 0, tempDatas.Length);
+                }
+            }
+
+            var aesKey = EncryptProvider.CreateAesKey();
+
+            //encrypt
+            var text = File.ReadAllText(file);
+            var datas = File.ReadAllBytes(file);
+
+            var encryptedDatas = EncryptProvider.AESEncrypt(datas, aesKey.Key, aesKey.IV);
+            var encryptedFile = Path.Combine(rootDir, "AES_File_Test_Encrypted.txt");
+
+            using (var fileStream = File.OpenWrite(encryptedFile))
+            {
+                fileStream.Write(encryptedDatas, 0, encryptedDatas.Length);
+            }
+
+            //decrypt
+            var encryptedFileDatas = File.ReadAllBytes(encryptedFile);
+            var decryptedDatas = EncryptProvider.AESDecrypt(encryptedFileDatas, aesKey.Key, aesKey.IV);
+
+            var decryptedText = Encoding.UTF8.GetString(decryptedDatas);
+
+            //assert
+            Assert.NotNull(decryptedDatas);
+            Assert.Equal(decryptedText, text);
+
+
         }
     }
 }
