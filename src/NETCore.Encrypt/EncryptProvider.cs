@@ -30,7 +30,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < length; i++)
+            for (int i = 0;i < length;i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -400,7 +400,7 @@ namespace NETCore.Encrypt
             {
                 return null;
             }
-            return Encoding.UTF8.GetString(bytes);   
+            return Encoding.UTF8.GetString(bytes);
         }
 
         /// <summary>  
@@ -476,7 +476,15 @@ namespace NETCore.Encrypt
             using (RSA rsa = RSA.Create())
             {
                 rsa.FromJsonString(publicKey);
-                byte[] encryptBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(srcString), padding);
+                var maxLength = GetMaxRsaEncryptLength(rsa, padding);
+                var rawBytes = Encoding.UTF8.GetBytes(srcString);
+
+                if (rawBytes.Length > maxLength)
+                {
+                    throw new OutofMaxlengthException(maxLength, $"'{srcString}' is out of max length");
+                }
+
+                byte[] encryptBytes = rsa.Encrypt(rawBytes, padding);
                 return encryptBytes.ToHexString();
             }
         }
@@ -538,7 +546,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int)rsaSize;
+                rsa.KeySize = (int) rsaSize;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
@@ -552,6 +560,47 @@ namespace NETCore.Encrypt
                 };
             }
         }
+
+        /// <summary>
+        /// Get rsa encrypt max length 
+        /// </summary>
+        /// <param name="rsa">Rsa instance </param>
+        /// <param name="padding"><see cref="RSAEncryptionPadding"/></param>
+        /// <returns></returns>
+        private static int GetMaxRsaEncryptLength(RSA rsa, RSAEncryptionPadding padding)
+        {
+            var offset = 0;
+            if (padding.Mode == RSAEncryptionPaddingMode.Pkcs1)
+            {
+                offset = 11;
+            }
+            else
+            {
+                if (padding.Equals(RSAEncryptionPadding.OaepSHA1))
+                {
+                    offset = 42;
+                }
+
+                if (padding.Equals(RSAEncryptionPadding.OaepSHA256))
+                {
+                    offset = 66;
+                }
+
+                if (padding.Equals(RSAEncryptionPadding.OaepSHA384))
+                {
+                    offset = 98;
+                }
+
+                if (padding.Equals(RSAEncryptionPadding.OaepSHA512))
+                {
+                    offset = 130;
+                }
+            }
+            var keySize = rsa.KeySize;
+            var maxLength = keySize / 8 - offset;
+            return maxLength;
+        }
+
         #endregion
 
         #region MD5
@@ -862,7 +911,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0; i < random.Length; i++)
+            for (int i = 0;i < random.Length;i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }
