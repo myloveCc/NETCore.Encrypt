@@ -20,7 +20,7 @@ Install-Package NETCore.Encrypt -Version 2.0.6
 #### Create AES Key
 
   ```csharp
-  var aseKey = EncryptProvider.CreateAesKey();
+  var aesKey = EncryptProvider.CreateAesKey();
   
   var key = aesKey.Key;
   var iv = aesKey.IV;
