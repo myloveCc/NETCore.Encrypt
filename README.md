@@ -1,14 +1,14 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
-[![NetStandard 2.0](https://img.shields.io/badge/NetStandard-2.0-orange.svg)](https://www.microsoft.com/net/core)
+[![NetStandard 2.0.3](https://img.shields.io/badge/NetStandard-2.0.3-orange.svg)](https://www.microsoft.com/net/core)
 [![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
 
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 ```
-Install-Package NETCore.Encrypt -Version 2.0.6
+Install-Package NETCore.Encrypt -Version 2.0.7
 ```
 
 ***
@@ -20,7 +20,7 @@ Install-Package NETCore.Encrypt -Version 2.0.6
 #### Create AES Key
 
   ```csharp
-  var aseKey = EncryptProvider.CreateAesKey();
+  var aesKey = EncryptProvider.CreateAesKey();
   
   var key = aesKey.Key;
   var iv = aesKey.IV;
