@@ -238,7 +238,7 @@ namespace NETCore.Encrypt
                     Byte[] bKey = new Byte[32];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
-                    aes.Mode = CipherMode.ECB;
+                    aes.Mode = CipherMode.CBC;
                     aes.Padding = PaddingMode.PKCS7;
                     aes.KeySize = 128;
                     //aes.Key = _key;  
@@ -283,7 +283,7 @@ namespace NETCore.Encrypt
                 //mStream.Seek( 0, SeekOrigin.Begin );  
                 using (Aes aes = Aes.Create())
                 {
-                    aes.Mode = CipherMode.ECB;
+                    aes.Mode = CipherMode.CBC;
                     aes.Padding = PaddingMode.PKCS7;
                     aes.KeySize = 128;
                     aes.Key = bKey;
@@ -361,7 +361,7 @@ namespace NETCore.Encrypt
                     Byte[] bKey = new Byte[24];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
-                    des.Mode = CipherMode.ECB;
+                    des.Mode = CipherMode.CBC;
                     des.Padding = PaddingMode.PKCS7;
                     des.Key = bKey;
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateEncryptor(), CryptoStreamMode.Write))
@@ -423,7 +423,7 @@ namespace NETCore.Encrypt
             {
                 using (TripleDES des = TripleDES.Create())
                 {
-                    des.Mode = CipherMode.ECB;
+                    des.Mode = CipherMode.CBC;
                     des.Padding = PaddingMode.PKCS7;
                     des.Key = bKey;
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateDecryptor(), CryptoStreamMode.Read))
