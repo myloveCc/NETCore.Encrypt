@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 
 namespace NETCore.Encrypt.Demo
 {
@@ -95,6 +96,47 @@ namespace NETCore.Encrypt.Demo
             Console.WriteLine("SHA256: " + EncryptProvider.Sha256(plaintext));
             Console.WriteLine("SHA384: " + EncryptProvider.Sha384(plaintext));
             Console.WriteLine("SHA512: " + EncryptProvider.Sha512(plaintext));
+
+
+            Console.WriteLine();
+            Console.WriteLine("** Test issues #25  https://github.com/myloveCc/NETCore.Encrypt/issues/25 **");
+
+            rsaKey = EncryptProvider.CreateRsaKey();
+
+            publicKey = rsaKey.PublicKey;
+            privateKey = rsaKey.PrivateKey;
+
+            var testStr = "test issues #25 ";
+
+            Console.WriteLine($"Test str:{testStr}");
+
+            var saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Split("NETCore.Encrypt.Demo")[0], "Framework472.EncryptDemo\\bin\\Debug");
+
+            //save public key
+            var publicKeySavePath = Path.Combine(saveDir, "privateKey.txt");
+            if (File.Exists(publicKeySavePath))
+            {
+                File.Delete(publicKeySavePath);
+            }
+            using (FileStream fs = new FileStream(publicKeySavePath, FileMode.CreateNew))
+            {
+                fs.Write(Encoding.UTF8.GetBytes(privateKey));
+            }
+
+            //save encrypt text
+            var encryptStr = EncryptProvider.RSAEncrypt(publicKey, testStr, RSAEncryptionPadding.Pkcs1);
+            Console.WriteLine($"encryped str:{encryptStr}");
+            var encryptSavePath = Path.Combine(saveDir, "encrypt.txt");
+
+            if (File.Exists(encryptSavePath))
+            {
+                File.Delete(encryptSavePath);
+            }
+
+            using (FileStream fs = new FileStream(encryptSavePath, FileMode.CreateNew))
+            {
+                fs.Write(Encoding.UTF8.GetBytes(encryptStr));
+            }
 
             Console.ReadKey();
 

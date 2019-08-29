@@ -30,7 +30,7 @@ namespace NETCore.Encrypt
             StringBuilder num = new StringBuilder();
 
             Random rnd = new Random(DateTime.Now.Millisecond);
-            for (int i = 0;i < length;i++)
+            for (int i = 0; i < length; i++)
             {
                 num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
             }
@@ -448,6 +448,82 @@ namespace NETCore.Encrypt
         #endregion
 
         #region RSA
+
+
+        /// <summary>
+        /// RSA Sign
+        /// </summary>
+        /// <param name="conent">raw cotent </param>
+        /// <param name="privateKey">private key</param>
+        /// <returns></returns>
+        public static string RSASign(string conent, string privateKey)
+        {
+            return RSASign(conent, privateKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// RSA Sign
+        /// </summary>
+        /// <param name="content">raw content </param>
+        /// <param name="privateKey">private key</param>
+        /// <param name="hashAlgorithmName">hashAlgorithm name</param>
+        /// <param name="rSASignaturePadding">ras siginature padding</param>
+        /// <param name="encoding">text encoding</param>
+        /// <returns></returns>
+        public static string RSASign(string content, string privateKey, HashAlgorithmName hashAlgorithmName, RSASignaturePadding rSASignaturePadding, Encoding encoding)
+        {
+            Check.Argument.IsNotEmpty(content, nameof(content));
+            Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
+            Check.Argument.IsNotNull(rSASignaturePadding, nameof(rSASignaturePadding));
+
+            byte[] dataBytes = encoding.GetBytes(content);
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.FromJsonString(privateKey);
+                var signBytes = rsa.SignData(dataBytes, hashAlgorithmName, rSASignaturePadding);
+
+                return Convert.ToBase64String(signBytes);
+            }
+        }
+
+        /// <summary>
+        /// RSA Verify
+        /// </summary>
+        /// <param name="content">raw content</param>
+        /// <param name="signStr">sign str</param>
+        /// <param name="publickKey">public key</param>
+        /// <returns></returns>
+        public static bool RSAVerify(string content, string signStr, string publickKey)
+        {
+            return RSAVerify(content, signStr, publickKey, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// RSA Verify
+        /// </summary>
+        /// <param name="content">raw content</param>
+        /// <param name="signStr">sign str</param>
+        /// <param name="publickKey">public key</param>
+        /// <param name="hashAlgorithmName">hashAlgorithm name</param>
+        /// <param name="rSASignaturePadding">ras siginature padding</param>
+        /// <param name="encoding">text encoding</param>
+        /// <returns></returns>
+        public static bool RSAVerify(string content, string signStr, string publickKey, HashAlgorithmName hashAlgorithmName, RSASignaturePadding rSASignaturePadding, Encoding encoding)
+        {
+            Check.Argument.IsNotEmpty(content, nameof(content));
+            Check.Argument.IsNotEmpty(signStr, nameof(signStr));
+
+            byte[] dataBytes = encoding.GetBytes(content);
+            byte[] signBytes = Convert.FromBase64String(signStr);
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.FromJsonString(publickKey);
+                return rsa.VerifyData(dataBytes, signBytes, hashAlgorithmName, rSASignaturePadding);
+            }
+        }
+
         /// <summary>
         /// RSA encrypt 
         /// </summary>
@@ -546,7 +622,7 @@ namespace NETCore.Encrypt
         {
             using (RSA rsa = RSA.Create())
             {
-                rsa.KeySize = (int) rsaSize;
+                rsa.KeySize = (int)rsaSize;
 
                 string publicKey = rsa.ToJsonString(false);
                 string privateKey = rsa.ToJsonString(true);
@@ -911,7 +987,7 @@ namespace NETCore.Encrypt
             rng.GetBytes(random);
 
             StringBuilder machineKey = new StringBuilder(length);
-            for (int i = 0;i < random.Length;i++)
+            for (int i = 0; i < random.Length; i++)
             {
                 machineKey.Append(string.Format("{0:X2}", random[i]));
             }

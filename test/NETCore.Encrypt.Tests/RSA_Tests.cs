@@ -172,7 +172,7 @@ namespace NETCore.Encrypt.Tests
 
             //RSAEncryptionPaddingMode is Pkcs1
             var padding = RSAEncryptionPadding.Pkcs1;
-            var maxLength = ((int) size - 384) / 8 + 37;
+            var maxLength = ((int)size - 384) / 8 + 37;
             var rawData = rawStr.Substring(0, maxLength);
 
             var encryptedStr = EncryptProvider.RSAEncrypt(publicKey, rawData, padding);
@@ -183,7 +183,7 @@ namespace NETCore.Encrypt.Tests
 
             var sha1 = "oaep".SHA1();
             var length = sha1.Length;
-            maxLength = (int) size / 8 - 42;   //214 //40 
+            maxLength = (int)size / 8 - 42;   //214 //40 
             rawData = rawStr.Substring(0, maxLength);
 
             encryptedStr = EncryptProvider.RSAEncrypt(publicKey, rawData, padding);
@@ -193,7 +193,7 @@ namespace NETCore.Encrypt.Tests
 
             padding = RSAEncryptionPadding.OaepSHA256;
 
-            maxLength = (int) size / 8 - 66;   //190   //64
+            maxLength = (int)size / 8 - 66;   //190   //64
             rawData = rawStr.Substring(0, maxLength);
 
             encryptedStr = EncryptProvider.RSAEncrypt(publicKey, rawData, padding);
@@ -202,7 +202,7 @@ namespace NETCore.Encrypt.Tests
             Assert.Equal(decryptedStr, rawData);
 
             padding = RSAEncryptionPadding.OaepSHA384;
-            maxLength = (int) size / 8 - 98;  //158  //96
+            maxLength = (int)size / 8 - 98;  //158  //96
             rawData = rawStr.Substring(0, maxLength);
 
             encryptedStr = EncryptProvider.RSAEncrypt(publicKey, rawData, padding);
@@ -211,7 +211,7 @@ namespace NETCore.Encrypt.Tests
             Assert.Equal(decryptedStr, rawData);
 
             padding = RSAEncryptionPadding.OaepSHA512;
-            maxLength = (int) size / 8 - 130; //126  // 128
+            maxLength = (int)size / 8 - 130; //126  // 128
             rawData = rawStr.Substring(0, maxLength);
 
             encryptedStr = EncryptProvider.RSAEncrypt(publicKey, rawData, padding);
@@ -234,6 +234,25 @@ namespace NETCore.Encrypt.Tests
             {
                 EncryptProvider.RSAEncrypt(publicKey, rawStr);
             });
+        }
+
+        [Fact(DisplayName = "Rsa sign and verify test")]
+        public void Rsa_SignAndVerify_Test()
+        {
+            //Act
+            var rawStr = "123456";
+
+            var rsaKey = EncryptProvider.CreateRsaKey();
+            var privateKey = rsaKey.PrivateKey;
+            var publicKey = rsaKey.PublicKey;
+
+            var signStr = EncryptProvider.RSASign(rawStr, privateKey);
+
+            var result = EncryptProvider.RSAVerify(rawStr, signStr, publicKey);
+
+            //Assert
+            Assert.NotEmpty(signStr);
+            Assert.True(result);
         }
     }
 }
