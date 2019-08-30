@@ -93,7 +93,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
-- #### Create DES Iv  $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
+- #### Create DES Iv 
 
   ```csharp
   
@@ -128,14 +128,14 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
     ```
 
-- #### DES encrypt bytes with iv (CBC mode)  $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
+- #### DES encrypt bytes with iv (CBC mode) 【NEW】}【PRE】
 
     ```csharp
     var srcBytes =  new byte[]{xxx};
     var encrypted = EncryptProvider.DESEncrypt(srcBytes, key, iv);
     ```
 
-- #### DES decrypt bytes with iv (CBC mode) $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
+- #### DES decrypt bytes with iv (CBC mode)【NEW】【PRE】
 
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
@@ -155,7 +155,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     }
     ```
   
-  - #### Create RSA Key with RsaSize(update at version 2.0.1)
+  - #### Create RSA Key with RsaSize
 
     ```csharp
     var rsaKey = EncryptProvider.CreateRsaKey();    //default is 2048
@@ -168,7 +168,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method  $\color{#34a853}{【NEW】}$
+  - #### Rsa Sign and Verify method  【NEW】
 
     ```csharp
 	string rawStr = "xxx";
@@ -202,14 +202,14 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decrypted = EncryptProvider.RSADecrypt(privateKey, encryptedStr, RSAEncryptionPadding.Pkcs1);
     ```
 
-  - #### RSA from string (add at version 2.0.1)
+  - #### RSA from string 
 
     ```csharp
     var privateKey = rsaKey.PrivateKey;
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
 
-   - #### RSA with PEM $\color{#34a853}{【NEW】}$
+   - #### RSA with PEM 【NEW】
 
      ```csharp
 
