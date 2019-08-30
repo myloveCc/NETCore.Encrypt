@@ -101,9 +101,9 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
 
             byte[] plainBytes = data;
-            byte[] bKey = new Byte[32];
+            byte[] bKey = new byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
-            byte[] bVector = new Byte[16];
+            byte[] bVector = new byte[16];
             Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
 
             byte[] encryptData = null; // encrypted data
@@ -179,9 +179,9 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
 
             byte[] encryptedBytes = data;
-            byte[] bKey = new Byte[32];
+            byte[] bKey = new byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
-            byte[] bVector = new Byte[16];
+            byte[] bVector = new byte[16];
             Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
 
             byte[] decryptedData = null; // decrypted data
@@ -196,7 +196,7 @@ namespace NETCore.Encrypt
                         {
                             using (MemoryStream tempMemory = new MemoryStream())
                             {
-                                byte[] Buffer = new Byte[1024];
+                                byte[] Buffer = new byte[1024];
                                 Int32 readBytes = 0;
                                 while ((readBytes = Decryptor.Read(Buffer, 0, Buffer.Length)) > 0)
                                 {
@@ -235,7 +235,7 @@ namespace NETCore.Encrypt
                 using (Aes aes = Aes.Create())
                 {
                     byte[] plainBytes = Encoding.UTF8.GetBytes(data);
-                    byte[] bKey = new Byte[32];
+                    byte[] bKey = new byte[32];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
                     aes.Mode = CipherMode.ECB;
@@ -274,7 +274,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
 
             byte[] encryptedBytes = Convert.FromBase64String(data);
-            byte[] bKey = new Byte[32];
+            byte[] bKey = new byte[32];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
             using (MemoryStream Memory = new MemoryStream(encryptedBytes))
@@ -358,7 +358,7 @@ namespace NETCore.Encrypt
                 using (TripleDES des = TripleDES.Create())
                 {
                     byte[] plainBytes = data;
-                    byte[] bKey = new Byte[24];
+                    byte[] bKey = new byte[24];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
                     des.Mode = CipherMode.ECB;
@@ -416,7 +416,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
             byte[] encryptedBytes = data;
-            byte[] bKey = new Byte[24];
+            byte[] bKey = new byte[24];
             Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
             using (MemoryStream Memory = new MemoryStream(encryptedBytes))
