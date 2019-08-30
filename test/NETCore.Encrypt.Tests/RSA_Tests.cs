@@ -254,5 +254,100 @@ namespace NETCore.Encrypt.Tests
             Assert.NotEmpty(signStr);
             Assert.True(result);
         }
+
+        [Theory(DisplayName = "Rsa to pem test")]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Rsa_To_Pem_Test(bool isPKCS8)
+        {
+            //Act
+            var pemResult = EncryptProvider.RSAToPem(isPKCS8);
+
+            //Assert
+            Assert.NotEmpty(pemResult.privatePem);
+            Assert.NotEmpty(pemResult.publicPem);
+        }
+
+
+        [Fact(DisplayName = "Rsa from pem test")]
+        public void Rsa_From_Pem_Test()
+        {
+            //Act
+            var pemPublicKey = @"
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxnBvS8cdsnAev2sRDRYWxznm1
+QxZzaypfNXLvK7CDGk8TR7K+Pzsa+tpJfoyN/Z4B6xdlpsERo2Cu6AzolvrDLx5w
+ZoI0kgdfaBMbUkdOB1m97zFYjKWoPeTskFzWZ3GHcQ3EXT0NJXXFXAskY45vEpbc
+5qFgEhcPy3BMqHRibwIDAQAB
+-----END PUBLIC KEY-----";
+
+            var rsaFromPublickPem = EncryptProvider.RSAFromPem(pemPublicKey);
+
+            var pemPrivateKey = @"
+-----BEGIN RSA PRIVATE KEY-----
+MIICWwIBAAKBgQCxnBvS8cdsnAev2sRDRYWxznm1QxZzaypfNXLvK7CDGk8TR7K+
+Pzsa+tpJfoyN/Z4B6xdlpsERo2Cu6AzolvrDLx5wZoI0kgdfaBMbUkdOB1m97zFY
+jKWoPeTskFzWZ3GHcQ3EXT0NJXXFXAskY45vEpbc5qFgEhcPy3BMqHRibwIDAQAB
+AoGAAdwpqm7fxh0S3jOYpJULeQ45gL11dGX7Pp4CWHYzq1vQ14SDtFxYfnLWwGLz
+499zvSoSHP1pvjPgz6lxy9Rw8dUxCgvh8VQydMQzaug2XD1tkmtcSWInwFKBAfQ7
+rceleyD0aK8JHJiuzM1p+yIJ/ImGK0Zk2U/svqrdJrNR4EkCQQDo3d5iWcjd3OLD
+38k1GALEuN17KNpJqLvJcIEJl0pcHtOiNnyy2MR/XUghDpuxwhrhudB/TvX4tuI0
+MUeVo5fjAkEAw0D6m9jkwE5uuEYN/l/84rbQ79p2I7r5Sk6zbMyBOvgl6CDlJyxY
+434DDm6XW7c55ALrnlratEW5HPiPxuHZBQJANnE4vtGy7nvn4Fd/mRQmAYwe695f
+On1iefP9lxpx3huu6uvGN6IKPqS2alQZ/nMdCc0Be+IgC6fmNsGWtNtsdQJAJvB4
+ikgxJqD9t8ZQ2CAwgM5Q0OTSlsGdIdKcOeB3DVmbxbV5vdw8RfJFjcVEbkgWRYDH
+mKcp4rXc+wgfNFyqOQJATZ1I5ER8AZAn5JMMH9zK+6oFvhLUgKyWO18W+dbcFrBd
+AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
+-----END RSA PRIVATE KEY-----";
+
+            var rsaFromPrivatePem = EncryptProvider.RSAFromPem(pemPrivateKey);
+
+            //Assert
+            Assert.NotNull(rsaFromPublickPem);
+            Assert.NotNull(rsaFromPublickPem);
+            Assert.Equal(rsaFromPublickPem.KeySize, rsaFromPrivatePem.KeySize);
+        }
+
+
+        [Fact(DisplayName = "Rsa encrypt decrypt with pem key test")]
+        public void Rsa_Pem_Test()
+        {
+            //Act
+            var rawStr = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQMIGfMA0GCS";
+
+            var pemPublicKey = @"
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxnBvS8cdsnAev2sRDRYWxznm1
+QxZzaypfNXLvK7CDGk8TR7K+Pzsa+tpJfoyN/Z4B6xdlpsERo2Cu6AzolvrDLx5w
+ZoI0kgdfaBMbUkdOB1m97zFYjKWoPeTskFzWZ3GHcQ3EXT0NJXXFXAskY45vEpbc
+5qFgEhcPy3BMqHRibwIDAQAB
+-----END PUBLIC KEY-----";
+
+            var pemPrivateKey = @"
+-----BEGIN RSA PRIVATE KEY-----
+MIICWwIBAAKBgQCxnBvS8cdsnAev2sRDRYWxznm1QxZzaypfNXLvK7CDGk8TR7K+
+Pzsa+tpJfoyN/Z4B6xdlpsERo2Cu6AzolvrDLx5wZoI0kgdfaBMbUkdOB1m97zFY
+jKWoPeTskFzWZ3GHcQ3EXT0NJXXFXAskY45vEpbc5qFgEhcPy3BMqHRibwIDAQAB
+AoGAAdwpqm7fxh0S3jOYpJULeQ45gL11dGX7Pp4CWHYzq1vQ14SDtFxYfnLWwGLz
+499zvSoSHP1pvjPgz6lxy9Rw8dUxCgvh8VQydMQzaug2XD1tkmtcSWInwFKBAfQ7
+rceleyD0aK8JHJiuzM1p+yIJ/ImGK0Zk2U/svqrdJrNR4EkCQQDo3d5iWcjd3OLD
+38k1GALEuN17KNpJqLvJcIEJl0pcHtOiNnyy2MR/XUghDpuxwhrhudB/TvX4tuI0
+MUeVo5fjAkEAw0D6m9jkwE5uuEYN/l/84rbQ79p2I7r5Sk6zbMyBOvgl6CDlJyxY
+434DDm6XW7c55ALrnlratEW5HPiPxuHZBQJANnE4vtGy7nvn4Fd/mRQmAYwe695f
+On1iefP9lxpx3huu6uvGN6IKPqS2alQZ/nMdCc0Be+IgC6fmNsGWtNtsdQJAJvB4
+ikgxJqD9t8ZQ2CAwgM5Q0OTSlsGdIdKcOeB3DVmbxbV5vdw8RfJFjcVEbkgWRYDH
+mKcp4rXc+wgfNFyqOQJATZ1I5ER8AZAn5JMMH9zK+6oFvhLUgKyWO18W+dbcFrBd
+AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
+-----END RSA PRIVATE KEY-----";
+
+            var enctypedStr = EncryptProvider.RSAEncryptWithPem(pemPublicKey, rawStr);
+
+            var decryptedStr = EncryptProvider.RSADecryptWithPem(pemPrivateKey, enctypedStr);
+
+            //Assert
+            Assert.NotEmpty(enctypedStr);
+            Assert.Equal(decryptedStr, rawStr);
+
+        }
     }
 }

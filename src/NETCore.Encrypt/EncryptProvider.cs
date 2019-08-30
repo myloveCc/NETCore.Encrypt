@@ -449,6 +449,36 @@ namespace NETCore.Encrypt
 
         #region RSA
 
+        /// <summary>
+        /// RSA Converter to pem
+        /// </summary>
+        /// <param name="isPKCS8"></param>
+        /// <returns></returns>
+        public static (string publicPem, string privatePem) RSAToPem(bool isPKCS8)
+        {
+            var rsaKey = CreateRsaKey();
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.FromJsonString(rsaKey.PrivateKey);
+
+                var publicPem = RsaProvider.ToPem(rsa, false, isPKCS8);
+                var privatePem = RsaProvider.ToPem(rsa, true, isPKCS8);
+
+                return (publicPem, privatePem);
+            }
+        }
+
+        /// <summary>
+        /// RSA From pem
+        /// </summary>
+        /// <param name="pem"></param>
+        /// <returns></returns>
+        public static RSA RSAFromPem(string pem)
+        {
+            Check.Argument.IsNotEmpty(pem, nameof(pem));
+            return RsaProvider.FromPem(pem);
+        }
 
         /// <summary>
         /// RSA Sign
@@ -537,27 +567,50 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
+        /// RSA encrypt with pem key
+        /// </summary>
+        /// <param name="publicKey">pem public key</param>
+        /// <param name="scrString">src string</param>
+        /// <returns></returns>
+        public static string RSAEncryptWithPem(string publicKey, string srcString)
+        {
+            string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1, true);
+            return encryptStr;
+        }
+
+        /// <summary>
         /// RSA encrypt 
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="srcString">src string</param>
         /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <param name="isPemKey">set key is pem format,default is false</param>
         /// <returns>encrypted string</returns>
-        public static string RSAEncrypt(string publicKey, string srcString, RSAEncryptionPadding padding)
+        public static string RSAEncrypt(string publicKey, string srcString, RSAEncryptionPadding padding, bool isPemKey = false)
         {
             Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotNull(padding, nameof(padding));
 
-            using (RSA rsa = RSA.Create())
+            RSA rsa;
+            if (isPemKey)
             {
+                rsa = RsaProvider.FromPem(publicKey);
+            }
+            else
+            {
+                rsa = RSA.Create();
                 rsa.FromJsonString(publicKey);
+            }
+
+            using (rsa)
+            {
                 var maxLength = GetMaxRsaEncryptLength(rsa, padding);
                 var rawBytes = Encoding.UTF8.GetBytes(srcString);
 
                 if (rawBytes.Length > maxLength)
                 {
-                    throw new OutofMaxlengthException(maxLength, $"'{srcString}' is out of max length");
+                    throw new OutofMaxlengthException($"'{srcString}' is out of max encrypt length {maxLength}", maxLength, rsa.KeySize, padding);
                 }
 
                 byte[] encryptBytes = rsa.Encrypt(rawBytes, padding);
@@ -578,21 +631,44 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
+        /// RSA decrypt with pem key
+        /// </summary>
+        /// <param name="privateKey">pem private key</param>
+        /// <param name="scrString">src string</param>
+        /// <returns></returns>
+        public static string RSADecryptWithPem(string privateKey, string srcString)
+        {
+            string decryptStr = RSADecrypt(privateKey, srcString, RSAEncryptionPadding.Pkcs1, true);
+            return decryptStr;
+        }
+
+        /// <summary>
         /// RSA encrypt 
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="srcString">src string</param>
         /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <param name="isPemKey">set key is pem format,default is false</param>
         /// <returns>encrypted string</returns>
-        public static string RSADecrypt(string privateKey, string srcString, RSAEncryptionPadding padding)
+        public static string RSADecrypt(string privateKey, string srcString, RSAEncryptionPadding padding, bool isPemKey = false)
         {
             Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
             Check.Argument.IsNotEmpty(srcString, nameof(srcString));
             Check.Argument.IsNotNull(padding, nameof(padding));
 
-            using (RSA rsa = RSA.Create())
+            RSA rsa;
+            if (isPemKey)
             {
+                rsa = RsaProvider.FromPem(privateKey);
+            }
+            else
+            {
+                rsa = RSA.Create();
                 rsa.FromJsonString(privateKey);
+            }
+
+            using (rsa)
+            {
                 byte[] srcBytes = srcString.ToBytes();
                 byte[] decryptBytes = rsa.Decrypt(srcBytes, padding);
                 return Encoding.UTF8.GetString(decryptBytes);
@@ -635,6 +711,27 @@ namespace NETCore.Encrypt
                     Modulus = rsa.ExportParameters(false).Modulus.ToHexString()
                 };
             }
+        }
+
+        /// <summary>
+        /// Create an RSA key 
+        /// </summary>
+        /// <param name="rsa">rsa</param>
+        /// <returns></returns>
+        public static RSAKey CreateRsaKey(RSA rsa)
+        {
+            Check.Argument.IsNotNull(rsa, nameof(rsa));
+
+            string publicKey = rsa.ToJsonString(false);
+            string privateKey = rsa.ToJsonString(true);
+
+            return new RSAKey()
+            {
+                PublicKey = publicKey,
+                PrivateKey = privateKey,
+                Exponent = rsa.ExportParameters(false).Exponent.ToHexString(),
+                Modulus = rsa.ExportParameters(false).Modulus.ToHexString()
+            };
         }
 
         /// <summary>
