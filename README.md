@@ -93,7 +93,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
-- #### Create DES Iv 【NEW】【PRE】
+- #### Create DES Iv  $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
 
   ```csharp
   
@@ -128,14 +128,14 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
     ```
 
-- #### DES encrypt bytes with iv (CBC mode) 【NEW】【PRE】
+- #### DES encrypt bytes with iv (CBC mode)  $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
 
     ```csharp
     var srcBytes =  new byte[]{xxx};
     var encrypted = EncryptProvider.DESEncrypt(srcBytes, key, iv);
     ```
 
-- #### DES decrypt bytes with iv (CBC mode) 【NEW】【PRE】
+- #### DES decrypt bytes with iv (CBC mode) $\color{#34a853}{【NEW】}\color{#fbbc05}{【PRE】}$
 
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
@@ -168,7 +168,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method 【NEW】
+  - #### Rsa Sign and Verify method  $\color{#34a853}{【NEW】}$
 
     ```csharp
 	string rawStr = "xxx";
@@ -209,7 +209,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
 
-   - #### RSA with PEM 【NEW】
+   - #### RSA with PEM $\color{#34a853}{【NEW】}$
 
      ```csharp
 
