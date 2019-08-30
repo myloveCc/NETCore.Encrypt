@@ -9,10 +9,12 @@ namespace NETCore.Encrypt.Tests
     public class DES_Test
     {
         private readonly string _Key;
+        private readonly string _IV;
 
         public DES_Test()
         {
             _Key = EncryptProvider.CreateDesKey();
+            _IV = EncryptProvider.CreateDesIv();
         }
 
         [Fact(DisplayName = "DES ke test")]
@@ -59,6 +61,23 @@ namespace NETCore.Encrypt.Tests
             Assert.NotEmpty(encrypted);
             Assert.NotEmpty(decrypted);
             Assert.Equal(srcString, decrypted);
+        }
+
+
+        [Fact(DisplayName = "DES CBC mode decrypt success test")]
+        public void DES_CBCMode_Success_Test()
+        {
+            var srcString = "test DES encrypt";
+
+            //Ack
+            var srsDatas = Encoding.UTF8.GetBytes(srcString);
+            var encrypted = EncryptProvider.DESEncrypt(srsDatas, _Key, _IV);
+            var decrypted = EncryptProvider.DESDecrypt(encrypted, _Key, _IV);
+            var decryptedStr = Encoding.UTF8.GetString(decrypted);
+            //Assert
+            Assert.NotEmpty(encrypted);
+            Assert.NotEmpty(decrypted);
+            Assert.Equal(srcString, decryptedStr);
         }
 
         [Fact(DisplayName = "DES decrypt with empty data test")]
