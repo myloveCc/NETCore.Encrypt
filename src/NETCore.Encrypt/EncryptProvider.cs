@@ -226,7 +226,6 @@ namespace NETCore.Encrypt
         public static string AESEncrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
-
             Check.Argument.IsNotEmpty(key, nameof(key));
             Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
 
@@ -241,9 +240,8 @@ namespace NETCore.Encrypt
                     aes.Mode = CipherMode.ECB;
                     aes.Padding = PaddingMode.PKCS7;
                     aes.KeySize = 128;
-                    //aes.Key = _key;  
                     aes.Key = bKey;
-                    //aes.IV = _iV; 
+
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         try
@@ -279,15 +277,13 @@ namespace NETCore.Encrypt
 
             using (MemoryStream Memory = new MemoryStream(encryptedBytes))
             {
-                //mStream.Write( encryptedBytes, 0, encryptedBytes.Length );  
-                //mStream.Seek( 0, SeekOrigin.Begin );  
                 using (Aes aes = Aes.Create())
                 {
                     aes.Mode = CipherMode.ECB;
                     aes.Padding = PaddingMode.PKCS7;
                     aes.KeySize = 128;
                     aes.Key = bKey;
-                    //aes.IV = _iV;  
+
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateDecryptor(), CryptoStreamMode.Read))
                     {
                         try
@@ -296,7 +292,8 @@ namespace NETCore.Encrypt
                             int len = cryptoStream.Read(tmp, 0, encryptedBytes.Length);
                             byte[] ret = new byte[len];
                             Array.Copy(tmp, 0, ret, 0, len);
-                            return Encoding.UTF8.GetString(ret);
+
+                            return Encoding.UTF8.GetString(ret, 0, len);
                         }
                         catch (Exception ex)
                         {
@@ -305,6 +302,14 @@ namespace NETCore.Encrypt
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// AES Rijndael
+        /// </summary>
+        public static void AESRijndael()
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
@@ -317,6 +322,15 @@ namespace NETCore.Encrypt
         public static string CreateDesKey()
         {
             return GetRandomStr(24);
+        }
+
+        /// <summary>
+        /// Create des iv
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateDesIv()
+        {
+            return GetRandomStr(8);
         }
 
         /// <summary>  
@@ -332,7 +346,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
             byte[] plainBytes = Encoding.UTF8.GetBytes(data);
-            var encryptBytes = DESEncrypt(plainBytes, key);
+            var encryptBytes = DESEncrypt(plainBytes, key, CipherMode.ECB);
 
             if (encryptBytes == null)
             {
@@ -344,10 +358,47 @@ namespace NETCore.Encrypt
         /// <summary>  
         /// DES encrypt
         /// </summary>  
-        /// <param name="data">Raw data</param>  
+        /// <param name="data">Raw data byte array</param>  
         /// <param name="key">Key, requires 24 bits</param>  
         /// <returns>Encrypted byte array</returns>  
         public static byte[] DESEncrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
+            return DESEncrypt(data, key, CipherMode.ECB);
+        }
+
+
+        /// <summary>  
+        /// DES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data byte array</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted byte array</returns>  
+        public static byte[] DESEncrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 8, 8, nameof(vector));
+
+            return DESEncrypt(data, key, CipherMode.CBC, vector);
+        }
+
+        /// <summary>  
+        /// DES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <param name="cipherMode"><see cref="CipherMode"/></param>  
+        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted byte array</returns>  
+        private static byte[] DESEncrypt(byte[] data, string key, CipherMode cipherMode, string vector = "", PaddingMode paddingMode = PaddingMode.PKCS7)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
@@ -361,9 +412,17 @@ namespace NETCore.Encrypt
                     byte[] bKey = new byte[24];
                     Array.Copy(Encoding.UTF8.GetBytes(key.PadRight(bKey.Length)), bKey, bKey.Length);
 
-                    des.Mode = CipherMode.ECB;
-                    des.Padding = PaddingMode.PKCS7;
+                    des.Mode = cipherMode;
+                    des.Padding = paddingMode;
                     des.Key = bKey;
+
+                    if (cipherMode == CipherMode.CBC)
+                    {
+                        byte[] bVector = new byte[8];
+                        Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+                        des.IV = bVector;
+                    }
+
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         try
@@ -394,7 +453,7 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
 
             byte[] encryptedBytes = Convert.FromBase64String(data);
-            byte[] bytes = DESDecrypt(encryptedBytes, key);
+            byte[] bytes = DESDecrypt(encryptedBytes, key, CipherMode.ECB);
 
             if (bytes == null)
             {
@@ -406,10 +465,45 @@ namespace NETCore.Encrypt
         /// <summary>  
         /// DES decrypt
         /// </summary>  
+        /// <param name="data">Encrypted data byte array</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <returns>Decrypted string</returns>  
+        public static byte[] DESDecrypt(byte[] data, string key)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+
+            return DESDecrypt(data, key, CipherMode.ECB);
+        }
+
+        /// <summary>  
+        /// DES encrypt
+        /// </summary>  
+        /// <param name="data">Raw data byte array</param>  
+        /// <param name="key">Key, requires 24 bits</param>  
+        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <returns>Encrypted byte array</returns>  
+        public static byte[] DESDecrypt(byte[] data, string key, string vector)
+        {
+            Check.Argument.IsNotEmpty(data, nameof(data));
+            Check.Argument.IsNotEmpty(key, nameof(key));
+            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsNotEmpty(vector, nameof(vector));
+            Check.Argument.IsNotOutOfRange(vector.Length, 8, 8, nameof(vector));
+
+            return DESDecrypt(data, key, CipherMode.CBC, vector);
+        }
+
+        /// <summary>  
+        /// DES decrypt
+        /// </summary>  
         /// <param name="data">Encrypted data</param>  
         /// <param name="key">Key, requires 24 bits</param>  
+        /// <param name="cipherMode"><see cref="CipherMode"/></param>  
+        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>  
         /// <returns>Decrypted byte array</returns>  
-        public static byte[] DESDecrypt(byte[] data, string key)
+        private static byte[] DESDecrypt(byte[] data, string key, CipherMode cipherMode, string vector = "", PaddingMode paddingMode = PaddingMode.PKCS7)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
@@ -423,9 +517,17 @@ namespace NETCore.Encrypt
             {
                 using (TripleDES des = TripleDES.Create())
                 {
-                    des.Mode = CipherMode.ECB;
-                    des.Padding = PaddingMode.PKCS7;
+                    des.Mode = cipherMode;
+                    des.Padding = paddingMode;
                     des.Key = bKey;
+
+                    if (cipherMode == CipherMode.CBC)
+                    {
+                        byte[] bVector = new byte[8];
+                        Array.Copy(Encoding.UTF8.GetBytes(vector.PadRight(bVector.Length)), bVector, bVector.Length);
+                        des.IV = bVector;
+                    }
+
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, des.CreateDecryptor(), CryptoStreamMode.Read))
                     {
                         try
