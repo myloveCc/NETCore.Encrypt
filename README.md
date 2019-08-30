@@ -93,7 +93,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
-- #### Create DES Iv 
+- #### Create DES Iv 【NEW】【PRE】
 
   ```csharp
   
@@ -128,7 +128,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
     ```
 
-- #### DES encrypt bytes with iv (CBC mode) 【NEW】}【PRE】
+- #### DES encrypt bytes with iv (CBC mode)【NEW】【PRE】
 
     ```csharp
     var srcBytes =  new byte[]{xxx};
@@ -168,7 +168,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method  【NEW】
+  - #### Rsa Sign and Verify method 【NEW】
 
     ```csharp
 	string rawStr = "xxx";
