@@ -93,7 +93,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
-- #### Create DES Iv
+- #### Create DES Iv 【NEW】
 
   ```csharp
   
