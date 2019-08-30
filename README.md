@@ -134,7 +134,7 @@ Install-Package NETCore.Encrypt -Version 2.0.7
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method
+  - #### Rsa Sign and Verify method （NEW）
 
     ```csharp
 	string rawStr = "xxx";
@@ -175,22 +175,27 @@ Install-Package NETCore.Encrypt -Version 2.0.7
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
 
-   - #### RSA with PEM
+   - #### RSA with PEM (NEW)
 
      ```csharp
 
 	 //Rsa to pem format key
 
-	 var pkcs1KeyTuple== EncryptProvider.RSAToPem(false);
-	 var pkcs8KeyTuple== EncryptProvider.RSAToPem(true);
+	 //PKCS1
+	 var pkcs1KeyTuple = EncryptProvider.RSAToPem(false);
+	 var publicPem = pkcs1KeyTuple.publicPem;
+	 var privatePem = pkcs1KeyTuple.publicPem;
+
+	 //PKCS8
+	 var pkcs8KeyTuple = EncryptProvider.RSAToPem(true);
+	 publicPem = pkcs8KeyTuple.publicPem;
+	 privatePem = pkcs8KeyTuple.publicPem;
 
 	 //Rsa from pem key
 
 	 var rsa = EncryptProvider.RSAFromPem(pemPublicKey);
+	 rsa = EncryptProvider.RSAFromPem(pemPrivateKey);
 
-     var publicKey = rsaKey.PublicKey;
-     var srcString = "rsa encrypt";
-	 
 	 //Rsa encrypt and decrypt with pem key
 
 	 var rawStr = "xxx";
