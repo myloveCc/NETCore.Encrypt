@@ -53,7 +53,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var encrypted = EncryptProvider.AESEncrypt(srcString, key, iv);
 
     ```
-  - AES encrypt bytes (CBC mode)
+  - AES encrypt bytes with iv (CBC mode)
 
     ```csharp
     var srcBytes = new byte[]{xxx};
@@ -76,14 +76,14 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
 
-  - AES decrypt bytes (CBC mode)
+  - AES decrypt bytes with iv (CBC mode)
    
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
     var decryptedBytes = EncryptProvider.AESDecrypt(encryptedBytes, key, iv);
     ```
 
-## DES (version 2.0.2)
+## DES
 
 - #### Create DES Key
 
@@ -139,7 +139,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
 
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
-    var encrypted = EncryptProvider.DESDecrypt(srcBytes, key, iv);
+    var encrypted = EncryptProvider.DESDecrypt(encryptedBytes, key, iv);
     ```
 
 ## RSA
