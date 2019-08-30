@@ -39,21 +39,21 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   ```
 
 #### AES encrypt
-  - AES encrypt without iv
+  - AES encrypt without iv (ECB mode)
 
     ```csharp
     var srcString = "aes encrypt";
     var encrypted = EncryptProvider.AESEncrypt(srcString, key);
 
     ```
-  - AES encrypt with iv
+  - AES encrypt with iv (CBC mode)
 
     ```csharp
     var srcString = "aes encrypt";
     var encrypted = EncryptProvider.AESEncrypt(srcString, key, iv);
 
     ```
-  - AES encrypt bytes at version 2.0.6
+  - AES encrypt bytes (CBC mode)
 
     ```csharp
     var srcBytes = new byte[]{xxx};
@@ -62,21 +62,21 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     ```
 #### ASE decrypt
 
-  - AES decrypt without iv
+  - AES decrypt without iv (ECB mode)
     
     ```csharp
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key);
     ```
   
-  - AES decrypt with iv
+  - AES decrypt with iv (CBC mode)
    
     ```csharp
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.AESDecrypt(encryptedStr, key, iv);
     ```
 
-  - AES decrypt bytes at version 2.0.6
+  - AES decrypt bytes (CBC mode)
    
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
@@ -93,31 +93,53 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
+- #### Create DES Iv
 
-- #### DES encrypt
+  ```csharp
+  
+  //des iv length is 8 bit
+  var desIv = EncryptProvider.CreateDesIv();
+  
+  ```
+
+- #### DES encrypt (ECB mode)
 
     ```csharp
     var srcString = "des encrypt";
     var encrypted = EncryptProvider.DESEncrypt(srcString, key);
     ```
-- #### DES encrypt bytes at version 2.0.6
+- #### DES encrypt bytes (ECB mode)
    
     ```csharp
     var srcBytes =  new byte[]{xxx};
     var decryptedBytes = EncryptProvider.DESEncrypt(srcBytes, key);
     ```
-- #### DES decrypt
+- #### DES decrypt (ECB mode)
 
     ```csharp
     var encryptedStr = "xxxx";
     var decrypted = EncryptProvider.DESDecrypt(encryptedStr, key);
     ```
 
-- #### DES decrypt bytes at version 2.0.6
-   
+- #### DES decrypt bytes  (ECB mode)
+
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
     var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
+    ```
+
+- #### DES encrypt bytes with iv (CBC mode) 【NEW】
+
+    ```csharp
+    var srcBytes =  new byte[]{xxx};
+    var encrypted = EncryptProvider.DESEncrypt(srcBytes, key, iv);
+    ```
+
+- #### DES decrypt bytes with iv (CBC mode) 【NEW】
+
+    ```csharp
+    var encryptedBytes =  new byte[]{xxx};
+    var encrypted = EncryptProvider.DESDecrypt(srcBytes, key, iv);
     ```
 
 ## RSA
@@ -125,7 +147,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   - #### Enum RsaSize
 
     ```csharp
-     public enum RsaSize
+    public enum RsaSize
     {
         R2048=2048,
         R3072=3072,
@@ -146,7 +168,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method （NEW）
+  - #### Rsa Sign and Verify method 【NEW】
 
     ```csharp
 	string rawStr = "xxx";
@@ -187,7 +209,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
 
-   - #### RSA with PEM (NEW)
+   - #### RSA with PEM 【NEW】
 
      ```csharp
 
