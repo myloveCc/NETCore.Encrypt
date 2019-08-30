@@ -196,12 +196,12 @@ dotnet add package NETCore.Encrypt --version 2.0.8
 	 //PKCS1
 	 var pkcs1KeyTuple = EncryptProvider.RSAToPem(false);
 	 var publicPem = pkcs1KeyTuple.publicPem;
-	 var privatePem = pkcs1KeyTuple.publicPem;
+	 var privatePem = pkcs1KeyTuple.privatePem;
 
 	 //PKCS8
 	 var pkcs8KeyTuple = EncryptProvider.RSAToPem(true);
 	 publicPem = pkcs8KeyTuple.publicPem;
-	 privatePem = pkcs8KeyTuple.publicPem;
+	 privatePem = pkcs8KeyTuple.privatePem;
 
 	 //Rsa from pem key
 
