@@ -133,6 +133,15 @@ Install-Package NETCore.Encrypt -Version 2.0.7
     var exponent = rsaKey.Exponent;
     var modulus = rsaKey.Modulus;
     ```
+	  
+  - #### Rsa Sign and Verify method
+
+    ```csharp
+	string rawStr = "xxx";
+    string signStr = EncryptProvider.RSASign(rawStr, privateKey);
+    bool   result = EncryptProvider.RSAVerify(rawStr, signStr, publicKey);
+    ```
+
   - #### RSA encrypt
   
     ```csharp
@@ -144,6 +153,7 @@ Install-Package NETCore.Encrypt -Version 2.0.7
 
     // On mac/linux at version 2.0.5
     var encrypted = EncryptProvider.RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1);
+
     ```
   
   - #### RSA decrypt
@@ -164,6 +174,30 @@ Install-Package NETCore.Encrypt -Version 2.0.7
     var privateKey = rsaKey.PrivateKey;
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
+
+   - #### RSA with PEM
+
+     ```csharp
+
+	 //Rsa to pem format key
+
+	 var pkcs1KeyTuple== EncryptProvider.RSAToPem(false);
+	 var pkcs8KeyTuple== EncryptProvider.RSAToPem(true);
+
+	 //Rsa from pem key
+
+	 var rsa = EncryptProvider.RSAFromPem(pemPublicKey);
+
+     var publicKey = rsaKey.PublicKey;
+     var srcString = "rsa encrypt";
+	 
+	 //Rsa encrypt and decrypt with pem key
+
+	 var rawStr = "xxx";
+	 var enctypedStr = EncryptProvider.RSAEncryptWithPem(pemPublicKey, rawStr);
+	 var decryptedStr = EncryptProvider.RSADecryptWithPem(pemPrivateKey, enctypedStr);
+
+	 ```
   
   ## MD5
   
