@@ -12,9 +12,9 @@
     <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <AssemblyVersion>2.0.7.0</AssemblyVersion>
-    <FileVersion>2.0.7.0</FileVersion>
-    <Version>2.0.7</Version>
+    <AssemblyVersion>2.0.8.0</AssemblyVersion>
+    <FileVersion>2.0.8.0</FileVersion>
+    <Version>2.0.8</Version>
     <PackageReleaseNotes>1: Add OutofMaxlengthException for rsa encrypt.
 2: Add test about rsa OutofMaxlengthException.
 </PackageReleaseNotes>
