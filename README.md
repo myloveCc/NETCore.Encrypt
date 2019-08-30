@@ -7,18 +7,21 @@
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
-```
-//Package Manager
 
+## Package Manager
+```
 Install-Package NETCore.Encrypt -Version 2.0.8
-
-//.NET CLI
-dotnet add package NETCore.Encrypt --version 2.0.8
-
-//PackageReference
-<PackageReference Include="NETCore.Encrypt" Version="2.0.8" />
-
 ```
+##.NET CLI
+```
+dotnet add package NETCore.Encrypt --version 2.0.8
+```
+
+## PackageReference
+```
+<PackageReference Include="NETCore.Encrypt" Version="2.0.8" />
+```
+
 
 ***
 
