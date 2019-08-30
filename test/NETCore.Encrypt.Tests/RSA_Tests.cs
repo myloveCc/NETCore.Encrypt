@@ -241,6 +241,7 @@ namespace NETCore.Encrypt.Tests
         {
             //Act
             var rawStr = "123456";
+            var rawStr1 = "123457";
 
             var rsaKey = EncryptProvider.CreateRsaKey();
             var privateKey = rsaKey.PrivateKey;
@@ -249,10 +250,12 @@ namespace NETCore.Encrypt.Tests
             var signStr = EncryptProvider.RSASign(rawStr, privateKey);
 
             var result = EncryptProvider.RSAVerify(rawStr, signStr, publicKey);
+            var errorResult = EncryptProvider.RSAVerify(rawStr1, signStr, publicKey);
 
             //Assert
             Assert.NotEmpty(signStr);
             Assert.True(result);
+            Assert.False(errorResult);
         }
 
         [Theory(DisplayName = "Rsa to pem test")]
