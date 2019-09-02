@@ -43,6 +43,10 @@ namespace NETCore.Encrypt
 
         #region AES
 
+        /*
+        AES:16位密钥=128位，24位密钥=192位，32位密钥=256位,IV均为16位
+        */
+
         /// <summary>
         /// Create ase key
         /// </summary>
@@ -239,7 +243,7 @@ namespace NETCore.Encrypt
 
                     aes.Mode = CipherMode.ECB;
                     aes.Padding = PaddingMode.PKCS7;
-                    aes.KeySize = 128;
+                    aes.KeySize = 256;
                     aes.Key = bKey;
 
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateEncryptor(), CryptoStreamMode.Write))
@@ -281,7 +285,7 @@ namespace NETCore.Encrypt
                 {
                     aes.Mode = CipherMode.ECB;
                     aes.Padding = PaddingMode.PKCS7;
-                    aes.KeySize = 128;
+                    aes.KeySize = 256;
                     aes.Key = bKey;
 
                     using (CryptoStream cryptoStream = new CryptoStream(Memory, aes.CreateDecryptor(), CryptoStreamMode.Read))
