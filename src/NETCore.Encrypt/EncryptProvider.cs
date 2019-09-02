@@ -304,12 +304,30 @@ namespace NETCore.Encrypt
             }
         }
 
+
+        #endregion
+
+        #region Rijndael
         /// <summary>
         /// AES Rijndael
         /// </summary>
-        public static void AESRijndael()
+        public static void RijndaelEncrypt(string data, string key)
         {
-            throw new NotImplementedException();
+            //https://blog.csdn.net/yupu56/article/details/72236950
+
+            using (Rijndael rijndael = Rijndael.Create())
+            {
+                Check.Argument.IsNotEmpty(data, nameof(data));
+                Check.Argument.IsNotEmpty(key, nameof(key));
+                Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+
+                rijndael.Mode = CipherMode.ECB;
+                rijndael.Padding = PaddingMode.PKCS7;
+                rijndael.KeySize = 256;
+       
+            }
+
+
         }
         #endregion
 
@@ -376,7 +394,7 @@ namespace NETCore.Encrypt
         /// </summary>  
         /// <param name="data">Raw data byte array</param>  
         /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <param name="vector">IV,requires 8 bits</param>  
         /// <returns>Encrypted byte array</returns>  
         public static byte[] DESEncrypt(byte[] data, string key, string vector)
         {
@@ -396,7 +414,7 @@ namespace NETCore.Encrypt
         /// <param name="key">Key, requires 24 bits</param>  
         /// <param name="cipherMode"><see cref="CipherMode"/></param>  
         /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <param name="vector">IV,requires 8 bits</param>  
         /// <returns>Encrypted byte array</returns>  
         private static byte[] DESEncrypt(byte[] data, string key, CipherMode cipherMode, string vector = "", PaddingMode paddingMode = PaddingMode.PKCS7)
         {
@@ -482,7 +500,7 @@ namespace NETCore.Encrypt
         /// </summary>  
         /// <param name="data">Raw data byte array</param>  
         /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
+        /// <param name="vector">IV,requires 8 bits</param>  
         /// <returns>Encrypted byte array</returns>  
         public static byte[] DESDecrypt(byte[] data, string key, string vector)
         {
