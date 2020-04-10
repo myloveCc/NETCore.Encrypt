@@ -309,6 +309,12 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             Assert.NotNull(rsaFromPublickPem);
             Assert.NotNull(rsaFromPublickPem);
             Assert.Equal(rsaFromPublickPem.KeySize, rsaFromPrivatePem.KeySize);
+            var privateKey= EncryptProvider.CreateRsaKey(rsaFromPrivatePem);
+            var publicKey = EncryptProvider.CreateRsaKey(rsaFromPublickPem,false);
+            var raw = "123123124";
+            var signStr = EncryptProvider.RSASign(raw, privateKey.PrivateKey);
+            var result = EncryptProvider.RSAVerify(raw, signStr, publicKey.PublicKey);
+            Assert.True(result);
         }
 
 
