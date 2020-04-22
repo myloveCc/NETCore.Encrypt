@@ -93,7 +93,7 @@ dotnet add package NETCore.Encrypt --version 2.0.8
   var desKey = EncryptProvider.CreateDesKey();
   
   ```
-- #### Create DES Iv 【NEW】【PRE】
+- #### Create DES Iv 【NEW】
 
   ```csharp
   
@@ -128,14 +128,14 @@ dotnet add package NETCore.Encrypt --version 2.0.8
     var decryptedBytes = EncryptProvider.DESDecrypt(encryptedBytes, key);
     ```
 
-- #### DES encrypt bytes with iv (CBC mode)【NEW】【PRE】
+- #### DES encrypt bytes with iv (CBC mode)【NEW】
 
     ```csharp
     var srcBytes =  new byte[]{xxx};
     var encrypted = EncryptProvider.DESEncrypt(srcBytes, key, iv);
     ```
 
-- #### DES decrypt bytes with iv (CBC mode)【NEW】【PRE】
+- #### DES decrypt bytes with iv (CBC mode)【NEW】
 
     ```csharp
     var encryptedBytes =  new byte[]{xxx};
