@@ -819,21 +819,29 @@ namespace NETCore.Encrypt
         /// Create an RSA key 
         /// </summary>
         /// <param name="rsa">rsa</param>
+        /// <param name="includePrivate"></param>
         /// <returns></returns>
-        public static RSAKey CreateRsaKey(RSA rsa)
+        public static RSAKey CreateRsaKey(RSA rsa, bool includePrivate = true)
         {
             Check.Argument.IsNotNull(rsa, nameof(rsa));
 
             string publicKey = rsa.ToJsonString(false);
-            string privateKey = rsa.ToJsonString(true);
 
-            return new RSAKey()
+
+            var rsaKey = new RSAKey()
             {
                 PublicKey = publicKey,
-                PrivateKey = privateKey,
+
                 Exponent = rsa.ExportParameters(false).Exponent.ToHexString(),
                 Modulus = rsa.ExportParameters(false).Modulus.ToHexString()
             };
+
+            if (includePrivate)
+            {
+                string privateKey = rsa.ToJsonString(true);
+                rsaKey.PrivateKey = privateKey;
+            }
+            return rsaKey;
         }
 
         /// <summary>
