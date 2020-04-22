@@ -328,7 +328,7 @@ namespace NETCore.Encrypt
                 rijndael.Mode = CipherMode.ECB;
                 rijndael.Padding = PaddingMode.PKCS7;
                 rijndael.KeySize = 256;
-       
+
             }
 
 
@@ -690,6 +690,8 @@ namespace NETCore.Encrypt
             return encryptStr;
         }
 
+
+
         /// <summary>
         /// RSA encrypt with pem key
         /// </summary>
@@ -701,6 +703,8 @@ namespace NETCore.Encrypt
             string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1, true);
             return encryptStr;
         }
+
+
 
         /// <summary>
         /// RSA encrypt 
@@ -739,6 +743,70 @@ namespace NETCore.Encrypt
 
                 byte[] encryptBytes = rsa.Encrypt(rawBytes, padding);
                 return encryptBytes.ToHexString();
+            }
+        }
+
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="data">data byte[]</param>
+        /// <returns>encrypted byte[]</returns>
+        public static byte[] RSAEncrypt(string publicKey, byte[] data)
+        {
+            byte[] encryptBytes = RSAEncrypt(publicKey, data, RSAEncryptionPadding.OaepSHA512);
+            return encryptBytes;
+        }
+
+        /// <summary>
+        /// RSA encrypt with pem key
+        /// </summary>
+        /// <param name="publicKey">pem public key</param>
+        /// <param name="data">data byte[]</param>
+        /// <returns></returns>
+        public static byte[] RSAEncryptWithPem(string publicKey, byte[] data)
+        {
+            byte[] encryptBytes = RSAEncrypt(publicKey, data, RSAEncryptionPadding.Pkcs1, true);
+            return encryptBytes;
+        }
+
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="data">data byte[]</param>
+        /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <param name="isPemKey">set key is pem format,default is false</param>
+        /// <returns>encrypted byte[]</returns>
+        public static byte[] RSAEncrypt(string publicKey, byte[] data, RSAEncryptionPadding padding, bool isPemKey = false)
+        {
+            Check.Argument.IsNotEmpty(publicKey, nameof(publicKey));
+            Check.Argument.IsNotNull(data, nameof(data));
+            Check.Argument.IsNotNull(padding, nameof(padding));
+
+            RSA rsa;
+            if (isPemKey)
+            {
+                rsa = RsaProvider.FromPem(publicKey);
+            }
+            else
+            {
+                rsa = RSA.Create();
+                rsa.FromJsonString(publicKey);
+            }
+
+            using (rsa)
+            {
+                var maxLength = GetMaxRsaEncryptLength(rsa, padding);
+                var rawBytes = data;
+
+                if (rawBytes.Length > maxLength)
+                {
+                    throw new OutofMaxlengthException($"data is out of max encrypt length {maxLength}", maxLength, rsa.KeySize, padding);
+                }
+
+                byte[] encryptBytes = rsa.Encrypt(rawBytes, padding);
+                return encryptBytes;
             }
         }
 
@@ -796,6 +864,63 @@ namespace NETCore.Encrypt
                 byte[] srcBytes = srcString.ToBytes();
                 byte[] decryptBytes = rsa.Decrypt(srcBytes, padding);
                 return Encoding.UTF8.GetString(decryptBytes);
+            }
+        }
+
+        /// <summary>
+        /// RSA decrypt
+        /// </summary>
+        /// <param name="privateKey">private key</param>
+        /// <param name="data">encrypted byte[]</param>
+        /// <returns>Decrypted string</returns>
+        public static byte[] RSADecrypt(string privateKey, byte[] data)
+        {
+            byte[] decryptBytes = RSADecrypt(privateKey, data, RSAEncryptionPadding.OaepSHA512);
+            return decryptBytes;
+        }
+
+        /// <summary>
+        /// RSA decrypt with pem key
+        /// </summary>
+        /// <param name="privateKey">pem private key</param>
+        /// <param name="data">encrypted byte[]</param>
+        /// <returns></returns>
+        public static byte[] RSADecryptWithPem(string privateKey, byte[] data)
+        {
+            byte[] decryptBytes = RSADecrypt(privateKey, data, RSAEncryptionPadding.Pkcs1, true);
+            return decryptBytes;
+        }
+
+        /// <summary>
+        /// RSA encrypt 
+        /// </summary>
+        /// <param name="publicKey">public key</param>
+        /// <param name="data">src string</param>
+        /// <param name="padding">rsa encryptPadding <see cref="RSAEncryptionPadding"/> RSAEncryptionPadding.Pkcs1 for linux/mac openssl </param>
+        /// <param name="isPemKey">set key is pem format,default is false</param>
+        /// <returns>encrypted string</returns>
+        public static byte[] RSADecrypt(string privateKey, byte[] data, RSAEncryptionPadding padding, bool isPemKey = false)
+        {
+            Check.Argument.IsNotEmpty(privateKey, nameof(privateKey));
+            Check.Argument.IsNotNull(data, nameof(data));
+            Check.Argument.IsNotNull(padding, nameof(padding));
+
+            RSA rsa;
+            if (isPemKey)
+            {
+                rsa = RsaProvider.FromPem(privateKey);
+            }
+            else
+            {
+                rsa = RSA.Create();
+                rsa.FromJsonString(privateKey);
+            }
+
+            using (rsa)
+            {
+                byte[] srcBytes = data;
+                byte[] decryptBytes = rsa.Decrypt(srcBytes, padding);
+                return decryptBytes;
             }
         }
 
