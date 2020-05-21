@@ -3,10 +3,14 @@
 [![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
 [![NetStandard 2.0.3](https://img.shields.io/badge/NetStandard-2.0.3-orange.svg)](https://www.microsoft.com/net/core)
 [![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
+![GitHub-Actions-Img]
 
 NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
+
+[GitHub-Actions-Img]:https://github.com/myloveCc/NETCore.Encrypt/workflows/test/badge.svg
+[GitHub-Actions-Url]:https://github.com/myloveCc/NETCore.Encrypt/actions
 
 ## Package Manager
 ```
@@ -365,3 +369,4 @@ dotnet add package NETCore.Encrypt --version 2.0.9
 # LICENSE
 
 [MIT License](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
+
