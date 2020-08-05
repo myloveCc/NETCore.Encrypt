@@ -1,7 +1,7 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
-[![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-2.0-brightgreen.svg)](https://www.microsoft.com/net/core)
-[![NetStandard 2.0.3](https://img.shields.io/badge/NetStandard-2.0.3-orange.svg)](https://www.microsoft.com/net/core)
+[![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-3.1-brightgreen.svg)](https://www.microsoft.com/net/core)
+[![NetStandard 2.1](https://img.shields.io/badge/NetStandard-2.1-orange.svg)](https://www.microsoft.com/net/core)
 [![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
 [![GitHub-Actions-Img]][GitHub-Actions-Url]
 
@@ -221,12 +221,12 @@ dotnet add package NETCore.Encrypt --version 2.0.9
 
 	 //Rsa to pem format key
 
-	 //PKCS1
+	 //PKCS1 pem
 	 var pkcs1KeyTuple = EncryptProvider.RSAToPem(false);
 	 var publicPem = pkcs1KeyTuple.publicPem;
 	 var privatePem = pkcs1KeyTuple.privatePem;
 
-	 //PKCS8
+	 //PKCS8 pem
 	 var pkcs8KeyTuple = EncryptProvider.RSAToPem(true);
 	 publicPem = pkcs8KeyTuple.publicPem;
 	 privatePem = pkcs8KeyTuple.privatePem;
@@ -243,7 +243,33 @@ dotnet add package NETCore.Encrypt --version 2.0.9
 	 var decryptedStr = EncryptProvider.RSADecryptWithPem(pemPrivateKey, enctypedStr);
 
 	 ```
-  
+   - #### RSA with PKCS #1 / PKCS #8 【PRE】
+
+     ```csharp
+
+	 //Rsa to pkcs1 format key
+
+	 //PKCS1
+	 var pkcs1KeyTuple = EncryptProvider.RsaToPkcs1();
+	 var publicPkcs1 = pkcs1KeyTuple.publicPkcs1;
+	 var privatePkcs1 = pkcs1KeyTuple.privatePkcs1;
+
+	 //PKCS8
+	 var pkcs8KeyTuple = EncryptProvider.RsaToPkcs8();
+	 var publicPkcs8 = pkcs1KeyTuple.publicPkcs8;
+	 var privatePkcs8 = pkcs1KeyTuple.privatePkcs8;
+
+	 //Rsa from pkcs public key
+
+	 var rsa = EncryptProvider.RSAFromPublicPkcs(pkcsPublicKey);  // Pkcs #1 | Pkcs #8
+	 rsa = EncryptProvider.RSAFromPrivatePkcs1(privatePkcs1);
+	 rsa = EncryptProvider.RSAFromPrivatePkcs8(privatePkcs8);
+	 
+	 //Rsa encrypt and decrypt with pkcs key
+		
+
+
+	 ```
   ## MD5
   
   ```csharp
