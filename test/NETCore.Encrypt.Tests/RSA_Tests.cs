@@ -309,8 +309,8 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             Assert.NotNull(rsaFromPublickPem);
             Assert.NotNull(rsaFromPublickPem);
             Assert.Equal(rsaFromPublickPem.KeySize, rsaFromPrivatePem.KeySize);
-            var privateKey= EncryptProvider.CreateRsaKey(rsaFromPrivatePem);
-            var publicKey = EncryptProvider.CreateRsaKey(rsaFromPublickPem,false);
+            var privateKey = EncryptProvider.CreateRsaKey(rsaFromPrivatePem);
+            var publicKey = EncryptProvider.CreateRsaKey(rsaFromPublickPem, false);
             var raw = "123123124";
             var signStr = EncryptProvider.RSASign(raw, privateKey.PrivateKey);
             var result = EncryptProvider.RSAVerify(raw, signStr, publicKey.PublicKey);
@@ -322,7 +322,7 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
         public void Rsa_Pem_Test()
         {
             //Act
-            var rawStr = @"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQMIGfMA0GCS";
+            var rawStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQMIGfMA0GCS";
 
             var pemPublicKey = @"
 -----BEGIN PUBLIC KEY-----
@@ -357,6 +357,82 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             Assert.NotEmpty(enctypedStr);
             Assert.Equal(decryptedStr, rawStr);
 
+        }
+
+        [Fact(DisplayName = "Rsa export pkcs #1 key test")]
+        public void Rsa_Pkcs1_Test()
+        {
+            //Act
+            var pkcs1Result = EncryptProvider.RsaToPkcs1();
+
+            //Assert
+            Assert.NotEmpty(pkcs1Result.publckPkcs1);
+            Assert.NotEmpty(pkcs1Result.privatePkcs1);
+        }
+
+        [Fact(DisplayName = "Rsa import pkcs #1 key test")]
+        public void Rsa_From_Pkcs1_Test()
+        {
+            //Act
+            var rawString = "test";
+            var pkcs1Result = EncryptProvider.RsaToPkcs1();
+
+            var publicKey = pkcs1Result.publckPkcs1;
+            var privateKey = pkcs1Result.privatePkcs1;
+
+            var rsa1 = EncryptProvider.RSAFromPublicPkcs(publicKey);
+            var rsaKey1 = EncryptProvider.CreateRsaKey(rsa1, false);
+
+            var rsa2 = EncryptProvider.RSAFromPrivatePkcs1(privateKey);
+            var rsaKey2 = EncryptProvider.CreateRsaKey(rsa2);
+
+            var encrytpedStr = EncryptProvider.RSAEncrypt(rsaKey1.PublicKey, rawString);
+            var decryptedStr = EncryptProvider.RSADecrypt(rsaKey2.PrivateKey, encrytpedStr);
+
+            //Assert
+            Assert.NotNull(rsa1);
+            Assert.NotNull(rsa2);
+            Assert.NotEmpty(encrytpedStr);
+            Assert.NotEmpty(decryptedStr);
+            Assert.Equal(rawString, decryptedStr);
+        }
+
+        [Fact(DisplayName = "Rsa export pkcs #8 key test")]
+        public void Rsa_Pkcs8_Test()
+        {
+            //Act
+            var pkcs1Result = EncryptProvider.RsaToPkcs8();
+
+            //Assert
+            Assert.NotEmpty(pkcs1Result.publckPkcs8);
+            Assert.NotEmpty(pkcs1Result.privatePkcs8);
+        }
+
+        [Fact(DisplayName = "Rsa import pkcs #8 key test")]
+        public void Rsa_From_Pkcs8_Test()
+        {
+            //Act
+            var rawStr = "test";
+            var pkcs1Result = EncryptProvider.RsaToPkcs8();
+
+            var publicKey = pkcs1Result.publckPkcs8;
+            var privateKey = pkcs1Result.privatePkcs8;
+
+            var rsa1 = EncryptProvider.RSAFromPublicPkcs(publicKey);
+            var rsaKey1 = EncryptProvider.CreateRsaKey(rsa1, false);
+
+            var rsa2 = EncryptProvider.RSAFromPrivatePkcs8(privateKey);
+            var rsaKey2 = EncryptProvider.CreateRsaKey(rsa2);
+
+            var encrytpedStr = EncryptProvider.RSAEncrypt(rsaKey1.PublicKey, rawStr);
+            var decryptedStr = EncryptProvider.RSADecrypt(rsaKey2.PrivateKey, encrytpedStr);
+
+            //Assert
+            Assert.NotNull(rsa1);
+            Assert.NotNull(rsa2);
+            Assert.NotEmpty(encrytpedStr);
+            Assert.NotEmpty(decryptedStr);
+            Assert.Equal(decryptedStr,rawStr );
         }
     }
 }
