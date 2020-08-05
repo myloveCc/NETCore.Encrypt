@@ -7,7 +7,6 @@ using NETCore.Encrypt.Shared;
 using NETCore.Encrypt.Extensions;
 using NETCore.Encrypt.Internal;
 using NETCore.Encrypt.Extensions.Internal;
-
 namespace NETCore.Encrypt
 {
     public class EncryptProvider
@@ -311,30 +310,6 @@ namespace NETCore.Encrypt
 
         #endregion
 
-        #region Rijndael
-        /// <summary>
-        /// AES Rijndael
-        /// </summary>
-        public static void RijndaelEncrypt(string data, string key)
-        {
-            //https://blog.csdn.net/yupu56/article/details/72236950
-
-            using (Rijndael rijndael = Rijndael.Create())
-            {
-                Check.Argument.IsNotEmpty(data, nameof(data));
-                Check.Argument.IsNotEmpty(key, nameof(key));
-                Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
-
-                rijndael.Mode = CipherMode.ECB;
-                rijndael.Padding = PaddingMode.PKCS7;
-                rijndael.KeySize = 256;
-
-            }
-
-
-        }
-        #endregion
-
         #region DES
 
         /// <summary>
@@ -576,15 +551,19 @@ namespace NETCore.Encrypt
         /// <summary>
         /// RSA Converter to pem
         /// </summary>
-        /// <param name="isPKCS8"></param>
+        /// <param name="isPKCS8">true:PKCS8 false:PKCS1</param>
+        /// <param name="keySize">Rsa key size ,default is 2048, min value is 2048</param>
         /// <returns></returns>
-        public static (string publicPem, string privatePem) RSAToPem(bool isPKCS8)
+        public static (string publicPem, string privatePem) RSAToPem(bool isPKCS8, int keySize = 2048)
         {
-            var rsaKey = CreateRsaKey();
+            if (keySize < 2048)
+            {
+                throw new ArgumentException($" Key size min value is 2048!");
+            }
 
             using (RSA rsa = RSA.Create())
             {
-                rsa.FromJsonString(rsaKey.PrivateKey);
+                rsa.KeySize = keySize;
 
                 var publicPem = RsaProvider.ToPem(rsa, false, isPKCS8);
                 var privatePem = RsaProvider.ToPem(rsa, true, isPKCS8);
@@ -602,6 +581,116 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(pem, nameof(pem));
             return RsaProvider.FromPem(pem);
+        }
+
+        /// <summary>
+        /// Export Rsa PKCS1 key
+        /// </summary>
+        /// <param name="keySize"></param>
+        /// <returns></returns>
+        public static (string publckPkcs1, string privatePkcs1) RsaToPkcs1(int keySize = 2048)
+        {
+            if (keySize < 2048)
+            {
+                throw new ArgumentException($" Key size min value is 2048!");
+            }
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.KeySize = keySize;
+                var publicKey = Convert.ToBase64String(rsa.ExportRSAPublicKey());
+                var privateKey = Convert.ToBase64String(rsa.ExportRSAPrivateKey());
+
+                return (publicKey, privateKey);
+            }
+        }
+
+        /// <summary>
+        /// Export Rsa PKCS8 key
+        /// </summary>
+        /// <param name="keySize"></param>
+        /// <returns></returns>
+        public static (string publckPkcs8, string privatePkcs8) RsaToPkcs8(int keySize = 2048)
+        {
+            if (keySize < 2048)
+            {
+                throw new ArgumentException($" Key size min value is 2048!");
+            }
+
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.KeySize = keySize;
+
+                var publicKey = Convert.ToBase64String(rsa.ExportRSAPublicKey());
+                var privateKey = Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
+
+                return (publicKey, privateKey);
+            }
+        }
+
+        /// <summary>
+        /// RSA From pkcs public key
+        /// </summary>
+        /// <param name="pkcsKey"></param>
+        /// <returns></returns>
+        public static RSA RSAFromPublicPkcs(string pkcsKey)
+        {
+            return RSAFromPkcs(pkcsKey, false);
+        }
+
+        /// <summary>
+        ///  RSA From pkcs #1 private key
+        /// </summary>
+        /// <param name="pkcsKey"></param>
+        /// <returns></returns>
+        public static RSA RSAFromPrivatePkcs1(string pkcsKey)
+        {
+            return RSAFromPkcs(pkcsKey, true);
+        }
+
+        /// <summary>
+        ///  RSA From pkcs #8 private key
+        /// </summary>
+        /// <param name="pkcsKey"></param>
+        /// <returns></returns>
+        public static RSA RSAFromPrivatePkcs8(string pkcsKey)
+        {
+            return RSAFromPkcs(pkcsKey, true, true);
+        }
+
+        /// <summary>
+        /// RSA From pkcs#1 or pkcs#8
+        /// </summary>
+        /// <param name="pkcsKey">Pkcs #1 or Pkcs #8</param>
+        /// <param name="isPrivateKey">true:privateKey,false:publicKey</param>
+        /// <param name="isPKCS8">true:PKCS8 false:PKCS1</param>
+        /// <returns></returns>
+        public static RSA RSAFromPkcs(string pkcsKey, bool isPrivateKey, bool isPKCS8 = false)
+        {
+            Check.Argument.IsNotEmpty(pkcsKey, nameof(pkcsKey));
+
+            RSA rsa = RSA.Create();
+
+            var keySource = Convert.FromBase64String(pkcsKey);
+
+            if (!isPrivateKey)
+            {
+                rsa.ImportRSAPublicKey(keySource, out _);
+            }
+            else
+            {
+                if (isPKCS8)
+                {
+                    rsa.ImportPkcs8PrivateKey(keySource, out _);
+                }
+                else
+                {
+                    rsa.ImportRSAPrivateKey(keySource, out _);
+                }
+            }
+
+            return rsa;
+
         }
 
         /// <summary>
@@ -690,21 +779,17 @@ namespace NETCore.Encrypt
             return encryptStr;
         }
 
-
-
         /// <summary>
         /// RSA encrypt with pem key
         /// </summary>
         /// <param name="publicKey">pem public key</param>
-        /// <param name="scrString">src string</param>
+        /// <param name="srcString">src string</param>
         /// <returns></returns>
         public static string RSAEncryptWithPem(string publicKey, string srcString)
         {
             string encryptStr = RSAEncrypt(publicKey, srcString, RSAEncryptionPadding.Pkcs1, true);
             return encryptStr;
         }
-
-
 
         /// <summary>
         /// RSA encrypt 
@@ -929,7 +1014,22 @@ namespace NETCore.Encrypt
         /// </summary>
         /// <param name="rsaKey">rsa json string</param>
         /// <returns></returns>
+        [Obsolete("This method is obsoleted,please use RSAFromJson method!")]
         public static RSA RSAFromString(string rsaKey)
+        {
+            Check.Argument.IsNotEmpty(rsaKey, nameof(rsaKey));
+            RSA rsa = RSA.Create();
+
+            rsa.FromJsonString(rsaKey);
+            return rsa;
+        }
+
+        /// <summary>
+        /// RSA from json string
+        /// </summary>
+        /// <param name="rsaKey">rsa json key</param>
+        /// <returns></returns>
+        public static RSA RSAFromJson(string rsaKey)
         {
             Check.Argument.IsNotEmpty(rsaKey, nameof(rsaKey));
             RSA rsa = RSA.Create();
@@ -973,7 +1073,6 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotNull(rsa, nameof(rsa));
 
             string publicKey = rsa.ToJsonString(false);
-
 
             var rsaKey = new RSAKey()
             {
