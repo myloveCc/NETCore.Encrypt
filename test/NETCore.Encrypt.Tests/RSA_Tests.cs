@@ -366,7 +366,7 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             var pkcs1Result = EncryptProvider.RsaToPkcs1();
 
             //Assert
-            Assert.NotEmpty(pkcs1Result.publckPkcs1);
+            Assert.NotEmpty(pkcs1Result.publicPkcs1);
             Assert.NotEmpty(pkcs1Result.privatePkcs1);
         }
 
@@ -377,7 +377,7 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             var rawString = "test";
             var pkcs1Result = EncryptProvider.RsaToPkcs1();
 
-            var publicKey = pkcs1Result.publckPkcs1;
+            var publicKey = pkcs1Result.publicPkcs1;
             var privateKey = pkcs1Result.privatePkcs1;
 
             var rsa1 = EncryptProvider.RSAFromPublicPkcs(publicKey);
@@ -404,7 +404,7 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             var pkcs1Result = EncryptProvider.RsaToPkcs8();
 
             //Assert
-            Assert.NotEmpty(pkcs1Result.publckPkcs8);
+            Assert.NotEmpty(pkcs1Result.publicPkcs8);
             Assert.NotEmpty(pkcs1Result.privatePkcs8);
         }
 
@@ -415,7 +415,7 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             var rawStr = "test";
             var pkcs1Result = EncryptProvider.RsaToPkcs8();
 
-            var publicKey = pkcs1Result.publckPkcs8;
+            var publicKey = pkcs1Result.publicPkcs8;
             var privateKey = pkcs1Result.privatePkcs8;
 
             var rsa1 = EncryptProvider.RSAFromPublicPkcs(publicKey);

@@ -588,7 +588,7 @@ namespace NETCore.Encrypt
         /// </summary>
         /// <param name="keySize"></param>
         /// <returns></returns>
-        public static (string publckPkcs1, string privatePkcs1) RsaToPkcs1(int keySize = 2048)
+        public static (string publicPkcs1, string privatePkcs1) RsaToPkcs1(int keySize = 2048)
         {
             if (keySize < 2048)
             {
@@ -610,7 +610,7 @@ namespace NETCore.Encrypt
         /// </summary>
         /// <param name="keySize"></param>
         /// <returns></returns>
-        public static (string publckPkcs8, string privatePkcs8) RsaToPkcs8(int keySize = 2048)
+        public static (string publicPkcs8, string privatePkcs8) RsaToPkcs8(int keySize = 2048)
         {
             if (keySize < 2048)
             {
