@@ -11,16 +11,16 @@ using NETCore.Encrypt.Internal;
 namespace NETCore.Encrypt.Extensions.Internal
 {
     /// <summary>
-    /// RSA参数格式化扩展
+    /// RSA Parameter formatting extension
     /// </summary>
     internal static class RSAKeyExtensions
     {
         #region JSON
         /// <summary>
-        /// RSA导入key
+        /// RSA import key
         /// </summary>
-        /// <param name="rsa">RSA实例<see cref="RSA"/></param>
-        /// <param name="jsonString">RSA的Key序列化JSON字符串</param>
+        /// <param name="rsa">RSA instance<see cref="RSA"/></param>
+        /// <param name="jsonString">RSA Key serialization JSON string</param>
         internal static void FromJsonString(this RSA rsa, string jsonString)
         {
             Check.Argument.IsNotEmpty(jsonString, nameof(jsonString));
@@ -47,10 +47,10 @@ namespace NETCore.Encrypt.Extensions.Internal
         }
 
         /// <summary>
-        /// 获取RSA Key序列化Json
+        /// Get the RSA Key serialized to Json
         /// </summary>
-        /// <param name="rsa">RSA实例<see cref="RSA"/></param>
-        /// <param name="includePrivateParameters">是否包含私钥</param>
+        /// <param name="rsa">RSA instance<see cref="RSA"/></param>
+        /// <param name="includePrivateParameters">Whether to include the private key</param>
         /// <returns></returns>
         internal static string ToJsonString(this RSA rsa, bool includePrivateParameters)
         {
@@ -75,10 +75,10 @@ namespace NETCore.Encrypt.Extensions.Internal
         #region XML
 
         /// <summary>
-        /// RSA导入key
+        /// RSA import key
         /// </summary>
-        /// <param name="rsa">RSA实例<see cref="RSA"/></param>
-        /// <param name="jsonString">RSA的Key序列化XML字符串</param>
+        /// <param name="rsa">RSA instance<see cref="RSA"/></param>
+        /// <param name="xmlString">RSA Key serialization XML string</param>
         public static void FromLvccXmlString(this RSA rsa, string xmlString)
         {
             RSAParameters parameters = new RSAParameters();
@@ -112,10 +112,10 @@ namespace NETCore.Encrypt.Extensions.Internal
         }
 
         /// <summary>
-        /// 获取RSA Key序列化XML
+        /// Get the RSA Key as serialized XML
         /// </summary>
-        /// <param name="rsa">RSA实例<see cref="RSA"/></param>
-        /// <param name="includePrivateParameters">是否包含私钥</param>
+        /// <param name="rsa">RSA instance<see cref="RSA"/></param>
+        /// <param name="includePrivateParameters">Whether to include the private key</param>
         /// <returns></returns>
         public static string ToLvccXmlString(this RSA rsa, bool includePrivateParameters)
         {

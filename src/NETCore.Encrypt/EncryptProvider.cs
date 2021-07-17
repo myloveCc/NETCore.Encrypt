@@ -14,6 +14,11 @@ namespace NETCore.Encrypt
         #region Common
 
         /// <summary>
+        /// The single Random Generator
+        /// </summary>
+        private static Random random;
+
+        /// <summary>
         /// Generate a random key
         /// </summary>
         /// <param name="n">key length，IV is 16，Key is 32</param>
@@ -28,10 +33,15 @@ namespace NETCore.Encrypt
 
             StringBuilder num = new StringBuilder();
 
-            Random rnd = new Random(DateTime.Now.Millisecond);
+            //New stronger Random Generator
+            if (random == null)
+            {
+                random = new Random();
+            }
+
             for (int i = 0; i < length; i++)
             {
-                num.Append(arrChar[rnd.Next(0, arrChar.Length)].ToString());
+                num.Append(arrChar[random.Next(0, arrChar.Length)].ToString());
             }
 
             return num.ToString();
@@ -43,7 +53,7 @@ namespace NETCore.Encrypt
         #region AES
 
         /*
-        AES:16位密钥=128位，24位密钥=192位，32位密钥=256位,IV均为16位
+        AES: 16-bit key=128 bits, 24-bit key=192 bits, 32-bit key=256 bits, IV is 16 bits
         */
 
         /// <summary>
@@ -59,13 +69,13 @@ namespace NETCore.Encrypt
             };
         }
 
-        /// <summary>  
+        /// <summary>
         /// AES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
-        /// <returns>Encrypted string</returns>  
+        /// </summary>
+        /// <param name="data">Raw data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <param name="vector">IV,requires 16 bits</param>
+        /// <returns>Encrypted string</returns>
         public static string AESEncrypt(string data, string key, string vector)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -89,10 +99,10 @@ namespace NETCore.Encrypt
         /// <summary>
         /// AES encrypt
         /// </summary>
-        /// <param name="data">Raw data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
-        /// <returns>Encrypted byte array</returns>  
+        /// <param name="data">Raw data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <param name="vector">IV,requires 16 bits</param>
+        /// <returns>Encrypted byte array</returns>
         public static byte[] AESEncrypt(byte[] data, string key, string vector)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -135,13 +145,13 @@ namespace NETCore.Encrypt
             }
         }
 
-        /// <summary>  
+        /// <summary>
         ///  AES decrypt
-        /// </summary>  
-        /// <param name="data">Encrypted data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
-        /// <returns>Decrypted string</returns>  
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <param name="vector">IV,requires 16 bits</param>
+        /// <returns>Decrypted string</returns>
         public static string AESDecrypt(string data, string key, string vector)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -163,13 +173,13 @@ namespace NETCore.Encrypt
             return Encoding.UTF8.GetString(decryptBytes);
         }
 
-        /// <summary>  
+        /// <summary>
         ///  AES decrypt
-        /// </summary>  
-        /// <param name="data">Encrypted data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <param name="vector">IV,requires 16 bits</param>  
-        /// <returns>Decrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <param name="vector">IV,requires 16 bits</param>
+        /// <returns>Decrypted byte array</returns>
 
         public static byte[] AESDecrypt(byte[] data, string key, string vector)
         {
@@ -220,12 +230,12 @@ namespace NETCore.Encrypt
             }
         }
 
-        /// <summary>  
-        /// AES encrypt ( no IV)  
-        /// </summary>  
-        /// <param name="data">Raw data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <returns>Encrypted string</returns>  
+        /// <summary>
+        /// AES encrypt ( no IV)
+        /// </summary>
+        /// <param name="data">Raw data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <returns>Encrypted string</returns>
         public static string AESEncrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -262,12 +272,12 @@ namespace NETCore.Encrypt
             }
         }
 
-        /// <summary>  
-        /// AES decrypt( no IV)  
-        /// </summary>  
-        /// <param name="data">Encrypted data</param>  
-        /// <param name="key">Key, requires 32 bits</param>  
-        /// <returns>Decrypted string</returns>  
+        /// <summary>
+        /// AES decrypt( no IV)
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="key">Key, requires 32 bits</param>
+        /// <returns>Decrypted string</returns>
         public static string AESDecrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -330,12 +340,12 @@ namespace NETCore.Encrypt
             return GetRandomStr(8);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <returns>Encrypted string</returns>  
+        /// </summary>
+        /// <param name="data">Raw data</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <returns>Encrypted string</returns>
         public static string DESEncrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -352,12 +362,12 @@ namespace NETCore.Encrypt
             return Convert.ToBase64String(encryptBytes);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data byte array</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <returns>Encrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Raw data byte array</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <returns>Encrypted byte array</returns>
         public static byte[] DESEncrypt(byte[] data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -368,13 +378,13 @@ namespace NETCore.Encrypt
         }
 
 
-        /// <summary>  
+        /// <summary>
         /// DES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data byte array</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="vector">IV,requires 8 bits</param>  
-        /// <returns>Encrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Raw data byte array</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <param name="vector">IV,requires 8 bits</param>
+        /// <returns>Encrypted byte array</returns>
         public static byte[] DESEncrypt(byte[] data, string key, string vector)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -386,15 +396,15 @@ namespace NETCore.Encrypt
             return DESEncrypt(data, key, CipherMode.CBC, vector);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="cipherMode"><see cref="CipherMode"/></param>  
-        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>  
-        /// <param name="vector">IV,requires 8 bits</param>  
-        /// <returns>Encrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Raw data</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <param name="cipherMode"><see cref="CipherMode"/></param>
+        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>
+        /// <param name="vector">IV,requires 8 bits</param>
+        /// <returns>Encrypted byte array</returns>
         private static byte[] DESEncrypt(byte[] data, string key, CipherMode cipherMode, string vector = "", PaddingMode paddingMode = PaddingMode.PKCS7)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -437,12 +447,12 @@ namespace NETCore.Encrypt
             }
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES decrypt
-        /// </summary>  
-        /// <param name="data">Encrypted data</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <returns>Decrypted string</returns>  
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <returns>Decrypted string</returns>
         public static string DESDecrypt(string data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -459,12 +469,12 @@ namespace NETCore.Encrypt
             return Encoding.UTF8.GetString(bytes);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES decrypt
-        /// </summary>  
-        /// <param name="data">Encrypted data byte array</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <returns>Decrypted string</returns>  
+        /// </summary>
+        /// <param name="data">Encrypted data byte array</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <returns>Decrypted string</returns>
         public static byte[] DESDecrypt(byte[] data, string key)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -474,13 +484,13 @@ namespace NETCore.Encrypt
             return DESDecrypt(data, key, CipherMode.ECB);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES encrypt
-        /// </summary>  
-        /// <param name="data">Raw data byte array</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="vector">IV,requires 8 bits</param>  
-        /// <returns>Encrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Raw data byte array</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <param name="vector">IV,requires 8 bits</param>
+        /// <returns>Encrypted byte array</returns>
         public static byte[] DESDecrypt(byte[] data, string key, string vector)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -492,14 +502,14 @@ namespace NETCore.Encrypt
             return DESDecrypt(data, key, CipherMode.CBC, vector);
         }
 
-        /// <summary>  
+        /// <summary>
         /// DES decrypt
-        /// </summary>  
-        /// <param name="data">Encrypted data</param>  
-        /// <param name="key">Key, requires 24 bits</param>  
-        /// <param name="cipherMode"><see cref="CipherMode"/></param>  
-        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>  
-        /// <returns>Decrypted byte array</returns>  
+        /// </summary>
+        /// <param name="data">Encrypted data</param>
+        /// <param name="key">Key, requires 24 bits</param>
+        /// <param name="cipherMode"><see cref="CipherMode"/></param>
+        /// <param name="paddingMode"><see cref="PaddingMode"/> default is PKCS7</param>
+        /// <returns>Decrypted byte array</returns>
         private static byte[] DESDecrypt(byte[] data, string key, CipherMode cipherMode, string vector = "", PaddingMode paddingMode = PaddingMode.PKCS7)
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
@@ -768,7 +778,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="srcString">src string</param>
@@ -792,7 +802,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="srcString">src string</param>
@@ -832,7 +842,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="data">data byte[]</param>
@@ -856,7 +866,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="data">data byte[]</param>
@@ -920,7 +930,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="srcString">src string</param>
@@ -977,7 +987,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// RSA encrypt 
+        /// RSA encrypt
         /// </summary>
         /// <param name="publicKey">public key</param>
         /// <param name="data">src string</param>
@@ -1039,7 +1049,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// Create an RSA key 
+        /// Create an RSA key
         /// </summary>
         /// <param name="keySizeInBits">the default size is 2048</param>
         /// <returns></returns>
@@ -1063,7 +1073,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// Create an RSA key 
+        /// Create an RSA key
         /// </summary>
         /// <param name="rsa">rsa</param>
         /// <param name="includePrivate"></param>
@@ -1091,7 +1101,7 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// Get rsa encrypt max length 
+        /// Get rsa encrypt max length
         /// </summary>
         /// <param name="rsa">Rsa instance </param>
         /// <param name="padding"><see cref="RSAEncryptionPadding"/></param>
@@ -1186,13 +1196,13 @@ namespace NETCore.Encrypt
 
         #region SHA1
         /// <summary>
-        /// SHA1加密
+        /// SHA1 Encryption
         /// </summary>
         /// <param name="str">The string to be encrypted</param>
         /// <returns></returns>
         public static string Sha1(string str)
         {
-            Check.Argument.IsNotEmpty(str, "SHA1待加密字符");
+            Check.Argument.IsNotEmpty(str, nameof(str));
 
             using (SHA1 sha1 = SHA1.Create())
             {
@@ -1306,7 +1316,7 @@ namespace NETCore.Encrypt
         #region HMACSHA256
 
         /// <summary>
-        /// HMAC_SHA256 
+        /// HMAC_SHA256
         /// </summary>
         /// <param name="srcString">The string to be encrypted</param>
         /// <param name="key">encrypte key</param>
@@ -1419,17 +1429,19 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// 使用加密服务提供程序实现加密生成随机数
-        /// 
-        /// 说明：
-        /// validationKey 的值可以是48到128个字符长，强烈建议使用可用的最长密钥
-        /// decryptionKey 的值可以是16到48字符长，建议使用48字符长
-        /// 
-        /// 使用方式：
+        /// <para>Use cryptographic service providers to implement encryption to generate random numbers</para>
+        /// <para>
+        /// Description:
+        /// validationKey The value can be 48 to 128 characters long.It is strongly recommended to use the longest key available
+        /// decryptionKey The value can be 16 to 48 characters long.It is recommended to use 48 characters long
+        /// </para>
+        /// <para>
+        /// How to use:
         /// string decryptionKey = EncryptManager.CreateMachineKey(48);
         /// string validationKey = EncryptManager.CreateMachineKey(128);
+        /// </para>
         /// </summary>
-        /// <param name="length">长度</param>
+        /// <param name="length">Length</param>
         /// <returns></returns>
         private static string CreateMachineKey(int length)
         {
