@@ -12,11 +12,11 @@
     <PackageProjectUrl>https://github.com/myloveCc/NETCore.Encrypt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/myloveCc/NETCore.Encrypt</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <AssemblyVersion>2.0.9.0</AssemblyVersion>
-    <FileVersion>2.0.9.0</FileVersion>
-    <Version>2.0.9</Version>
-    <PackageReleaseNotes>1: Add OutofMaxlengthException for rsa encrypt.
-2: Add test about rsa OutofMaxlengthException.
+    <AssemblyVersion>2.0.9.1</AssemblyVersion>
+    <FileVersion>2.0.9.1</FileVersion>
+    <Version>2.0.9.1</Version>
+    <PackageReleaseNotes>1: Changed initialization of random generator
+2: Changed documentation from Chinese to English
 </PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>

@@ -1196,13 +1196,13 @@ namespace NETCore.Encrypt
 
         #region SHA1
         /// <summary>
-        /// SHA1加密
+        /// SHA1 Encryption
         /// </summary>
         /// <param name="str">The string to be encrypted</param>
         /// <returns></returns>
         public static string Sha1(string str)
         {
-            Check.Argument.IsNotEmpty(str, "SHA1待加密字符");
+            Check.Argument.IsNotEmpty(str, nameof(str));
 
             using (SHA1 sha1 = SHA1.Create())
             {
@@ -1429,17 +1429,19 @@ namespace NETCore.Encrypt
         }
 
         /// <summary>
-        /// 使用加密服务提供程序实现加密生成随机数
-        ///
-        /// 说明：
-        /// validationKey 的值可以是48到128个字符长，强烈建议使用可用的最长密钥
-        /// decryptionKey 的值可以是16到48字符长，建议使用48字符长
-        ///
-        /// 使用方式：
+        /// <para>Use cryptographic service providers to implement encryption to generate random numbers</para>
+        /// <para>
+        /// Description:
+        /// validationKey The value can be 48 to 128 characters long.It is strongly recommended to use the longest key available
+        /// decryptionKey The value can be 16 to 48 characters long.It is recommended to use 48 characters long
+        /// </para>
+        /// <para>
+        /// How to use:
         /// string decryptionKey = EncryptManager.CreateMachineKey(48);
         /// string validationKey = EncryptManager.CreateMachineKey(128);
+        /// </para>
         /// </summary>
-        /// <param name="length">长度</param>
+        /// <param name="length">Length</param>
         /// <returns></returns>
         private static string CreateMachineKey(int length)
         {
