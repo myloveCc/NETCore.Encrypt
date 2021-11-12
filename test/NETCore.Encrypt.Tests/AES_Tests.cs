@@ -68,7 +68,7 @@ namespace NETCore.Encrypt.Tests
             var aesKey = EncryptProvider.CreateAesKey();
             var key = aesKey.Key;
 
-            var srcString = "test aes encrypt";
+            var srcString = "test aes encrypt 123";
 
             //Ack
             var encrypted = EncryptProvider.AESEncrypt(srcString, key);
@@ -153,7 +153,7 @@ namespace NETCore.Encrypt.Tests
             var key = aesKey.Key;
             var iv = aesKey.IV;
 
-            var srcString = "test aes encrypt";
+            var srcString = "test aes encrypt 123 456";
 
             //Ack
             var encrypted = EncryptProvider.AESEncrypt(srcString, key, iv);
