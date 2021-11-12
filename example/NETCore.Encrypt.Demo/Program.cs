@@ -110,7 +110,7 @@ namespace NETCore.Encrypt.Demo
 
             Console.WriteLine($"Test str:{testStr}");
 
-            var saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.Split("NETCore.Encrypt.Demo")[0], "Framework472.EncryptDemo\\bin\\Debug");
+            var saveDir = AppDomain.CurrentDomain.BaseDirectory;
 
             //save public key
             var publicKeySavePath = Path.Combine(saveDir, "privateKey.txt");
