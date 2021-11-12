@@ -1,6 +1,6 @@
 # NETCore.Encrypt [中文文档](http://www.cnblogs.com/piscesLoveCc/p/7423205.html)
 [![NuGet](https://img.shields.io/nuget/v/NETCore.Encrypt.svg)](https://nuget.org/packages/NETCore.Encrypt)
-[![NETCore CLR](https://img.shields.io/badge/.NETCore%20Clr-3.1-brightgreen.svg)](https://www.microsoft.com/net/core)
+[![NET 6.0](https://img.shields.io/badge/.NET-6.0-brightgreen)](https://www.microsoft.com/net/core)
 [![NetStandard 2.1](https://img.shields.io/badge/NetStandard-2.1-orange.svg)](https://www.microsoft.com/net/core)
 [![license](https://img.shields.io/github/license/myloveCc/NETCore.Encrypt.svg)](https://github.com/myloveCc/NETCore.Encrypt/blob/master/License)
 [![GitHub-Actions-Img]][GitHub-Actions-Url]
@@ -16,16 +16,16 @@ To install NETCore.Encrypt, run the following command in the [Package Manager Co
 
 ## Package Manager
 ```
-Install-Package NETCore.Encrypt -Version 2.0.9.1
+Install-Package NETCore.Encrypt -Version 2.1.0
 ```
 ## .NET CLI
 ```
-dotnet add package NETCore.Encrypt --version 2.0.9.1
+dotnet add package NETCore.Encrypt --version 2.1.0
 ```
 
 ## PackageReference
 ```
-<PackageReference Include="NETCore.Encrypt" Version="2.0.9.1" />
+<PackageReference Include="NETCore.Encrypt" Version="2.1.0" />
 ```
 
 
@@ -174,7 +174,7 @@ dotnet add package NETCore.Encrypt --version 2.0.9.1
     var modulus = rsaKey.Modulus;
     ```
 	  
-  - #### Rsa Sign and Verify method 【NEW】
+  - #### Rsa Sign and Verify method
 
     ```csharp
 	string rawStr = "xxx";
@@ -215,7 +215,7 @@ dotnet add package NETCore.Encrypt --version 2.0.9.1
     RSA rsa = EncryptProvider.RSAFromString(privateKey);
     ```
 
-   - #### RSA with PEM 【NEW】
+   - #### RSA with PEM
 
      ```csharp
 
@@ -243,7 +243,7 @@ dotnet add package NETCore.Encrypt --version 2.0.9.1
 	 var decryptedStr = EncryptProvider.RSADecryptWithPem(pemPrivateKey, enctypedStr);
 
 	 ```
-   - #### RSA with PKCS #1 / PKCS #8 【PRE】
+   - #### RSA with PKCS #1 / PKCS #8 
 
      ```csharp
 
