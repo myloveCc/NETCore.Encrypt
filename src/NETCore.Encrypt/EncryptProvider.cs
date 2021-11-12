@@ -81,10 +81,10 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(data, nameof(data));
 
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 16, nameof(vector));
 
             byte[] plainBytes = Encoding.UTF8.GetBytes(data);
 
@@ -108,10 +108,10 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(data, nameof(data));
 
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 16, nameof(vector));
 
             byte[] plainBytes = data;
             byte[] bKey = new byte[32];
@@ -157,10 +157,10 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(data, nameof(data));
 
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 16, nameof(vector));
 
             byte[] encryptedBytes = Convert.FromBase64String(data);
 
@@ -186,10 +186,10 @@ namespace NETCore.Encrypt
             Check.Argument.IsNotEmpty(data, nameof(data));
 
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 16, 16, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 16, nameof(vector));
 
             byte[] encryptedBytes = data;
             byte[] bKey = new byte[32];
@@ -240,7 +240,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             using (MemoryStream memory = new MemoryStream())
             {
@@ -282,7 +282,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 32, 32, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 32, nameof(key));
 
             byte[] encryptedBytes = Convert.FromBase64String(data);
             byte[] bKey = new byte[32];
@@ -358,7 +358,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             byte[] plainBytes = Encoding.UTF8.GetBytes(data);
             var encryptBytes = DESEncrypt(plainBytes, key, CipherMode.ECB);
@@ -380,7 +380,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             return DESEncrypt(data, key, CipherMode.ECB);
         }
@@ -397,9 +397,9 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 8, 8, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 8, nameof(vector));
 
             return DESEncrypt(data, key, CipherMode.CBC, vector);
         }
@@ -417,7 +417,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             using (MemoryStream Memory = new MemoryStream())
             {
@@ -465,7 +465,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             byte[] encryptedBytes = Convert.FromBase64String(data);
             byte[] bytes = DESDecrypt(encryptedBytes, key, CipherMode.ECB);
@@ -487,7 +487,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             return DESDecrypt(data, key, CipherMode.ECB);
         }
@@ -503,9 +503,9 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
             Check.Argument.IsNotEmpty(vector, nameof(vector));
-            Check.Argument.IsNotOutOfRange(vector.Length, 8, 8, nameof(vector));
+            Check.Argument.IsEqualLength(vector.Length, 8, nameof(vector));
 
             return DESDecrypt(data, key, CipherMode.CBC, vector);
         }
@@ -522,7 +522,7 @@ namespace NETCore.Encrypt
         {
             Check.Argument.IsNotEmpty(data, nameof(data));
             Check.Argument.IsNotEmpty(key, nameof(key));
-            Check.Argument.IsNotOutOfRange(key.Length, 24, 24, nameof(key));
+            Check.Argument.IsEqualLength(key.Length, 24, nameof(key));
 
             byte[] encryptedBytes = data;
             byte[] bKey = new byte[24];

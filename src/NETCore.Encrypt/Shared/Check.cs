@@ -165,6 +165,7 @@ namespace NETCore.Encrypt.Shared
                     throw new ArgumentException("The collection can't be empty.", argumentName);
                 }
             }
+
             public static void IsNotOutOfRange(int argument, int min, int max, string argumentName)
             {
                 if ((argument < min) || (argument > max))
@@ -172,7 +173,6 @@ namespace NETCore.Encrypt.Shared
                     throw new ArgumentOutOfRangeException(argumentName, string.Format("{0} must be in the range \"{1}\"-\"{2}\".", argumentName, min, max));
                 }
             }
-
 
             /// <summary>
             /// Equal the length
