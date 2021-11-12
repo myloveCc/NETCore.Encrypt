@@ -23,7 +23,7 @@ namespace NETCore.Encrypt.Shared
             {
                 if (argument == Guid.Empty)
                 {
-                    throw new ArgumentException(string.Format("\"{0}\" 不能为空Guid.", argumentName), argumentName);
+                    throw new ArgumentException(string.Format("\"{0}\" can't be empty Guid.", argumentName), argumentName);
                 }
             }
 
@@ -31,7 +31,7 @@ namespace NETCore.Encrypt.Shared
             {
                 if (string.IsNullOrEmpty((argument ?? string.Empty).Trim()))
                 {
-                    throw new ArgumentException(string.Format("\"{0}\" 不能为空.", argumentName), argumentName);
+                    throw new ArgumentException(string.Format("\"{0}\" can't be empty.", argumentName), argumentName);
                 }
             }
 
@@ -39,7 +39,7 @@ namespace NETCore.Encrypt.Shared
             {
                 if (argument.Trim().Length > length)
                 {
-                    throw new ArgumentException(string.Format("\"{0}\" 不能超过 {1} 字符.", argumentName, length), argumentName);
+                    throw new ArgumentException(string.Format("\"{0}\" no more than {1} characters.", argumentName, length), argumentName);
                 }
             }
 
@@ -158,18 +158,33 @@ namespace NETCore.Encrypt.Shared
 
             public static void IsNotEmpty<T>(ICollection<T> argument, string argumentName)
             {
-                IsNotNull(argument, argumentName, "集合不能为Null");
+                IsNotNull(argument, argumentName, "The collection can't be null");
 
                 if (argument.Count == 0)
                 {
-                    throw new ArgumentException("集合不能为空.", argumentName);
+                    throw new ArgumentException("The collection can't be empty.", argumentName);
                 }
             }
             public static void IsNotOutOfRange(int argument, int min, int max, string argumentName)
             {
                 if ((argument < min) || (argument > max))
                 {
-                    throw new ArgumentOutOfRangeException(argumentName, string.Format("{0} 必须在此区间 \"{1}\"-\"{2}\".", argumentName, min, max));
+                    throw new ArgumentOutOfRangeException(argumentName, string.Format("{0} must be in the range \"{1}\"-\"{2}\".", argumentName, min, max));
+                }
+            }
+
+
+            /// <summary>
+            /// Equal the length
+            /// </summary>
+            /// <param name="sourceLength"></param>
+            /// <param name="limitLength"></param>
+            /// <param name="argumentName"></param>
+            public static void IsEqualLength(int sourceLength, int limitLength, string argumentName)
+            {
+                if (limitLength != sourceLength)
+                {
+                    throw new ArgumentException(argumentName, string.Format("The length of arugment {0} must be equal to {1}.", argumentName, limitLength));
                 }
             }
 
@@ -179,7 +194,7 @@ namespace NETCore.Encrypt.Shared
 
                 if (!File.Exists(argument))
                 {
-                    throw new ArgumentException(string.Format("\"{0}\" 文件不存在", argumentName), argumentName);
+                    throw new ArgumentException(string.Format("\"{0}\" file does not exist", argumentName), argumentName);
                 }
             }
 
@@ -189,7 +204,7 @@ namespace NETCore.Encrypt.Shared
 
                 if (!Directory.Exists(argument))
                 {
-                    throw new ArgumentException(string.Format("\"{0}\" 目录不存在", argumentName), argumentName);
+                    throw new ArgumentException(string.Format("\"{0}\" directory does not exist", argumentName), argumentName);
                 }
             }
         }
