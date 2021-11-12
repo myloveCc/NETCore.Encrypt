@@ -59,7 +59,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test aes encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESEncrypt(srcString, key));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESEncrypt(srcString, key));
         }
 
         [Fact(DisplayName = "AES decrypt success test")]
@@ -99,7 +99,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test aes encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESDecrypt(srcString, key));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESDecrypt(srcString, key));
         }
 
         [Fact(DisplayName = "AES encrypt with iv success test")]
@@ -130,7 +130,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test aes encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESEncrypt(srcString, key, iv));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESEncrypt(srcString, key, iv));
         }
 
         [Fact(DisplayName = "AES encrypt with error iv test")]
@@ -143,7 +143,7 @@ namespace NETCore.Encrypt.Tests
 
             var srcString = "test aes encrypt";
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESEncrypt(srcString, key, iv));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESEncrypt(srcString, key, iv));
         }
 
         [Fact(DisplayName = "AES decrypt with iv success test")]
@@ -174,7 +174,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test aes encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESDecrypt(srcString, key, iv));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESDecrypt(srcString, key, iv));
         }
 
         [Fact(DisplayName = "AES decrypt with error iv test")]
@@ -186,7 +186,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test aes encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.AESDecrypt(srcString, key, iv));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.AESDecrypt(srcString, key, iv));
         }
 
         [Fact(DisplayName = "AES encrypt and decrypt about file stream")]

@@ -45,7 +45,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test DES encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.DESEncrypt(srcString, key));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.DESEncrypt(srcString, key));
         }
 
         [Fact(DisplayName = "DES decrypt success test")]
@@ -96,7 +96,7 @@ namespace NETCore.Encrypt.Tests
             var srcString = "test DES encrypt";
 
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => EncryptProvider.DESDecrypt(srcString, key));
+            Assert.Throws<ArgumentException>(() => EncryptProvider.DESDecrypt(srcString, key));
         }
     }
 }
