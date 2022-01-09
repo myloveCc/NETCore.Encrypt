@@ -8,7 +8,7 @@
 [GitHub-Actions-Img]:https://github.com/myloveCc/NETCore.Encrypt/workflows/test/badge.svg
 [GitHub-Actions-Url]:https://github.com/myloveCc/NETCore.Encrypt/actions
 
-NETCore encrypt and decrpty tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
+NETCore encrypt and decrypt tool，Include AES，RSA，MD5，SAH1，SAH256，SHA384，SHA512 and more
 
 To install NETCore.Encrypt, run the following command in the [Package Manager Console](https://docs.microsoft.com/zh-cn/nuget/tools/package-manager-console)
 
