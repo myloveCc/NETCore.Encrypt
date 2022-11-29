@@ -16,16 +16,16 @@ To install NETCore.Encrypt, run the following command in the [Package Manager Co
 
 ## Package Manager
 ```
-Install-Package NETCore.Encrypt -Version 2.1.0
+Install-Package NETCore.Encrypt -Version 2.1.1
 ```
 ## .NET CLI
 ```
-dotnet add package NETCore.Encrypt --version 2.1.0
+dotnet add package NETCore.Encrypt --version 2.1.1
 ```
 
 ## PackageReference
 ```
-<PackageReference Include="NETCore.Encrypt" Version="2.1.0" />
+<PackageReference Include="NETCore.Encrypt" Version="2.1.1" />
 ```
 
 
