@@ -7,6 +7,8 @@ using NETCore.Encrypt.Shared;
 using NETCore.Encrypt.Extensions;
 using NETCore.Encrypt.Internal;
 using NETCore.Encrypt.Extensions.Internal;
+using System.Security.Cryptography.X509Certificates;
+
 namespace NETCore.Encrypt
 {
     public class EncryptProvider
@@ -693,7 +695,14 @@ namespace NETCore.Encrypt
 
             if (!isPrivateKey)
             {
-                rsa.ImportRSAPublicKey(keySource, out _);
+                try
+                {
+                    rsa.ImportRSAPublicKey(keySource, out _);
+                }
+                catch
+                {
+                    rsa.ImportSubjectPublicKeyInfo(keySource, out _);
+                }
             }
             else
             {

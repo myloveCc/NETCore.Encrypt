@@ -397,6 +397,55 @@ AzlTB+HHYEIyTmaDtXWAwgBvJNIHk4BbM1meCH4QnA==
             Assert.Equal(rawString, decryptedStr);
         }
 
+        [Fact(DisplayName = "Rsa import pkcs #1 string test")]
+        public void Rsa_From_Pkcs1Str_Test()
+        {
+            //Act
+            var rawString = "test";
+
+            var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyt4/XSnK6rp+FuRfawSsSqZn9kpa2c4c12wEHBa5ygdmL" +
+                            "GlkFFOv0XGvvnBhhdyZBa+rrrdWkva+Dl9Zk42DpkDNRpkDpAEvdax0ViqZ4Rq4fK4Gs3uG4fBYIUoV2m55OqqqUzK" +
+                            "+hlqBPTyh5jY5rHLZyJYWuWGhlFiM39YALVMvt5DqjaQBW0McrvKkID+y57VDOGS+MolM5yLgu/g0F9ph91zI/47K+" +
+                            "421fB3mXd+ecMj82xQiR0MGrP9aZ0MbhAFFzHQrXm709+5zdgioGlXkplyZkjRT6uU55K7qtykhxBuxpbpw5AYPdjLd" +
+                            "Mr2X3JjiK8J7zyLI/HimGApO2QIDAQAB";
+
+            var privateKey = "MIIEpAIBAAKCAQEAyt4/XSnK6rp+FuRfawSsSqZn9kpa2c4c12wEHBa5ygdmLGlkFFOv0XGvvnBhhdyZBa+rrrdWkva+" +
+                             "Dl9Zk42DpkDNRpkDpAEvdax0ViqZ4Rq4fK4Gs3uG4fBYIUoV2m55OqqqUzK+hlqBPTyh5jY5rHLZyJYWuWGhlFiM39YAL" +
+                             "VMvt5DqjaQBW0McrvKkID+y57VDOGS+MolM5yLgu/g0F9ph91zI/47K+421fB3mXd+ecMj82xQiR0MGrP9aZ0MbhAFFz" +
+                             "HQrXm709+5zdgioGlXkplyZkjRT6uU55K7qtykhxBuxpbpw5AYPdjLdMr2X3JjiK8J7zyLI/HimGApO2QIDAQABAoIBAC" +
+                             "ObdMW2Yy5mA2GjPfg7vr3vjUnWbTHTko5hICuJ9Zw3RkC/Utiag76gVLd5ZDSprpYn6ltlRKXQ9zTwmXljmlrg/ubITrJ" +
+                             "HnvvphBXnrlCrbvw7U2PHZ7pahC17onBPeanJcNHfkz9jvVFxRf1xQRg6pG0not9w+npePIPBPRC3PAMrpu3cXC7oqJb4" +
+                             "tWGXRX7Gz3ckbkRSvvFQfXr5g/pqtchp7RdFAxroqhGeqn7lsIuXdg21L6IwrUmi4MkW68aUnC53IO3jPncqau10nw2MD" +
+                             "dUmLJKdkcXXObIIY5fLQ2kZxuM2QcRf0Xv82OWmx/yUzXbGG3TEgA2HT/RbczECgYEA8ZC9bFUrppe5nxV5PKoXF8LHm5" +
+                             "KGYQS+Lci2ZaOoeJMGecSTuDczE+2dWEpRrwG5mrKGGpOnUpqG0l0Ch6wo9QcyPZgaj2Yg5VAcGyaTBddgG1L2PK3wi8b" +
+                             "8+IE1zOL5TxoiqSCd5o10LnNTGrqOXy6193XHHPpLc+540lX+7E0CgYEA1v2M64arAY89vtwOA/88O6tAy15Mc19mUoyI" +
+                             "PMruQaEe8lgL/1/1HGIt8b2h1wy9AWC+zti5GA/llo/EVJcCzsqalQhpYRrc+a5Bh3jAsFhjrGl0WGDph2QiqbygASNUO" +
+                             "kaCv3TzevIkV7lbs16Td10a7oxUeX7qUd8fPZaSQr0CgYEAqev6kv3GWsVXmQPt6DJtVBV7e3+ybwR7EpGhXBWnKEmjwH" +
+                             "v6vRZ3I4l9qOF+W/CGsr7pfkBm7sAsHkW2xeDgXpvVR2Z7KGvar/OOEbssqGs7+3x8IWrpTimHQPcC9UCjxnTH9NgwukC" +
+                             "+fP46cw7PnzyoW43JpiSads5ExxAe5fECgYEAuxjJLKdz5tWLvK+xGtViy+LLbrDQA4/AcpKOdal9E2xujCUHu+T8YQko" +
+                             "RrrrP0V8rthM9aIx4rji6taO27bX4LL9ODmry7AfIsL9kDIMLuudQow7jjY4xXTlnaXj8VmXkWePnaLfyd00t4s+PKlP2" +
+                             "I8UQwmo8lr6/OkaPPTusFkCgYAqGXLKncmQsQLVyqNZi/qfdM8cvX8IrpkjyUs3opt+jLVn1JGfTtvWQXisM4KSTpiP/Y" +
+                             "7PtDDk3cNm+DlhEz3c3JwjOGuzG0fG8BN5Xak1CR3fp0kuWeoR03EI8WAXR/GYH55TzfVQsbweRXhysr8HhZxezYloiyZ" +
+                             "kbQeDzt/P4g==";
+
+
+            var rsa1 = EncryptProvider.RSAFromPublicPkcs(publicKey);
+            var rsaKey1 = EncryptProvider.CreateRsaKey(rsa1, false);
+
+            var rsa2 = EncryptProvider.RSAFromPrivatePkcs1(privateKey);
+            var rsaKey2 = EncryptProvider.CreateRsaKey(rsa2);
+
+            var encrytpedStr = EncryptProvider.RSAEncrypt(rsaKey1.PublicKey, rawString);
+            var decryptedStr = EncryptProvider.RSADecrypt(rsaKey2.PrivateKey, encrytpedStr);
+
+            //Assert
+            Assert.NotNull(rsa1);
+            Assert.NotNull(rsa2);
+            Assert.NotEmpty(encrytpedStr);
+            Assert.NotEmpty(decryptedStr);
+            Assert.Equal(rawString, decryptedStr);
+        }
+
         [Fact(DisplayName = "Rsa export pkcs #8 key test")]
         public void Rsa_Pkcs8_Test()
         {
